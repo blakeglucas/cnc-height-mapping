@@ -24,10 +24,10 @@ class GCodeLine:
                 self.f = float(part[1:])
 
     def __repr__(self):
-        x_str = '' if self.x is None else f' X{self.x}'
-        y_str = '' if self.y is None else f' Y{self.y}'
-        z_str = '' if self.z is None else f' Z{self.z}'
-        f_str = '' if self.f is None else f' F{self.f}'
+        x_str = '' if self.x is None else f' X{self.x:.8f}'
+        y_str = '' if self.y is None else f' Y{self.y:.8f}'
+        z_str = '' if self.z is None else f' Z{self.z:.8f}'
+        f_str = '' if self.f is None else f' F{self.f:.8f}'
         return f'{self.cmd}{x_str}{y_str}{z_str}{f_str}\n'
 
 class GCodeObject:

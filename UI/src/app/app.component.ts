@@ -1,14 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
 import { ElectronService } from './services';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
+
+import * as GCodePreview from 'gcode-preview'
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements AfterViewInit {
+
+  gcodePreview: GCodePreview.WebGLPreview;
+
   constructor(
     private electronService: ElectronService,
     private translate: TranslateService
@@ -25,4 +30,21 @@ export class AppComponent {
       console.log('Run in browser');
     }
   }
+
+  ngAfterViewInit(): void {
+    this.gcodePreview = new GCodePreview.WebGLPreview({
+      targetId: 'gcode-preview',
+      buildVolume: {
+        x: 150,
+        y: 150,
+        z: 150,
+      },
+      initialCameraPosition: [0, 400, 450],
+    })
+
+    this.gcodePreview.processGCode('G0 X0 Y0 Z0.2\nG1 X42 Y42')
+    this.gcodePreview.render()
+  }
+
+  
 }

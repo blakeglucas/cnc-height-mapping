@@ -30,10 +30,13 @@ parser.add_argument('--gcode-target-z-depth', type=float, default=0.1, help='Spe
 parser.add_argument('--gcode-output-file', type=str, default=None, help='File to write contoured G Code to')
 parser.add_argument('--disable-height-map-cache', action=argparse.BooleanOptionalAction, help='Disables height map caching')
 parser.add_argument('--load-height-map-file', type=str, default=None, help='Specify a height map pickle file to load, skipping calibration. Will check height_map_cache folder then try an absolute path')
+parser.add_argument('--travel-z-height', '-z', type=float, default=0.4, help='Z value at which to travel between measurements')
+parser.add_argument('--z-step', type=float, default=0.1, help='Z value to step down while calibrating')
 
 def main():
     global parser
     args = parser.parse_args()
+    z_up = args.travel_z_height
     height_map = []
     if args.load_height_map_file is None:
         switchPort = serial.Serial(args.switch_port, args.switch_port_baud)
@@ -46,7 +49,7 @@ def main():
         total_progress_count = (args.x_div + 1) * (args.y_div + 1) * args.averages
         point_counts = 0
         printProgressBar(0, total_progress_count)
-        marlin.move(cncPort, x=0, y=0, z=1, rel=False)
+        marlin.move(cncPort, x=0, y=0, z=z_up, rel=False)
         while cY <= args.y_dim:
             time.sleep(0.5)
             row_map = []
@@ -54,14 +57,14 @@ def main():
                 i = 0
                 z_results = []
                 while i < args.averages:
-                    marlin.move(cncPort, x=cX, z=1, rel=False)
+                    marlin.move(cncPort, x=cX, z=z_up, rel=False)
                     # Alleviates race condition b/t movement and switch detection. Could probably make improvements on switch FW, but this is easier
                     time.sleep(0.2)
                     result = False
                     while not result:
                         result = switch.wait_for_trigger(switchPort, args.step_delay)
                         if not result:
-                            marlin.move(cncPort, z=-0.1)
+                            marlin.move(cncPort, z=-0.01)
                     pos = marlin.get_position(cncPort)
                     if pos[2] == 1:
                         print('Bad calibration, retrying...')
@@ -78,7 +81,7 @@ def main():
             if cY > args.y_dim:
                 marlin.move(cncPort, z=15)
             else:
-                marlin.move(cncPort, z=1, rel=False)
+                marlin.move(cncPort, z=z_up, rel=False)
                 marlin.move(cncPort, x=0, y=cY, rel=False)
         if not args.disable_height_map_cache:
             hm_cache_fpath = f'height_map_cache/height_map-{str(uuid.uuid4())[:8]}.pkl'
