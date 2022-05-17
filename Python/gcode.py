@@ -39,13 +39,11 @@ class GCodeObject:
         with open(file) as f:
             # Filter empty lines and G Code comments
             self.raw_gcode_ops = list(filter(lambda y: len(y) > 0 and not y.startswith('(') and not y.startswith(';'), [x.strip() for x in f.readlines()]))
-            # Filter all negative z moves
-            # self.gcode_lines = list(filter(lambda y: True if y.z is None else (y.x is not None or y.y is not None) or y.z >= 0, [GCodeLine(x) for x in self.raw_gcode_ops]))
             self.gcode_lines = [GCodeLine(x) for x in self.raw_gcode_ops]
-            # print(self.gcode_lines)
 
     def create_file(self, name: str):
         with open(name, 'w') as f:
             f.writelines(map(str, self.gcode_lines))
 
-GCodeObject('example.gcode')
+if __name__ == '__main__':
+    GCodeObject('example.gcode')
