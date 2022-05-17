@@ -32,7 +32,6 @@ parser.add_argument('--disable-height-map-cache', action=argparse.BooleanOptiona
 def main():
     global parser
     args = parser.parse_args()
-    print(args)
     switchPort = serial.Serial(args.switch_port, args.switch_port_baud)
     cncPort = serial.Serial(args.cnc_port, args.cnc_port_baud)
     input('WARNING: This tool assumes proper connection to the CNC bit and the copper board. If these connections are not present, damage to your CNC equipment may occur. Press Enter to acknowledge.')
@@ -77,7 +76,6 @@ def main():
         else:
             marlin.move(cncPort, z=1, rel=False)
             marlin.move(cncPort, x=0, y=cY, rel=False)
-    print(args.disable_height_map_cache)
     if not args.disable_height_map_cache:
         hm_cache_fpath = f'height_map_cache/height_map-{str(uuid.uuid4())[:8]}.pkl'
         pickle.dump(height_map, open(hm_cache_fpath, 'wb'))
