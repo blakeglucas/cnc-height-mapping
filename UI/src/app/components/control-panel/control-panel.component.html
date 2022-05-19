@@ -3,6 +3,7 @@
   mwlResizable
   (resizing)="onResize($event)"
   [ngStyle]="{ width: width + 'px' }"
+  style="z-index: 1"
 >
   <a
     *ngIf="width !== initialWidth"

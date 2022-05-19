@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { ElectronService } from './services/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
@@ -14,6 +14,8 @@ import { SocketService } from './services/socket.service';
 export class AppComponent implements AfterViewInit {
 
   gcodePreview: GCodePreview.WebGLPreview;
+
+  controlPanelWidth = 450;
 
   constructor(
     private electronService: ElectronService,
@@ -47,6 +49,10 @@ export class AppComponent implements AfterViewInit {
     // this.gcodePreview.processGCode('G0 X0 Y0 Z0.2\nG1 X42 Y42')
     // this.gcodePreview.render()
     // this.socketService.listSerialPorts()
+  }
+
+  onControlPanelResize(newWidth: number) {
+    this.controlPanelWidth = newWidth
   }
 
   

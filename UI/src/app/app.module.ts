@@ -22,12 +22,13 @@ import { InputComponent } from './components/input/input.component';
 import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 import { DividerComponent } from './components/divider/divider.component';
 import { MachineControlButtonComponent } from './components/machine-control-button/machine-control-button.component';
+import { TabsViewComponent } from './components/tabs-view/tabs-view.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
 @NgModule({
-  declarations: [AppComponent, ControlPanelComponent, DropdownComponent, ButtonComponent, InputComponent, MenuBarComponent, DividerComponent, MachineControlButtonComponent],
+  declarations: [AppComponent, ControlPanelComponent, DropdownComponent, ButtonComponent, InputComponent, MenuBarComponent, DividerComponent, MachineControlButtonComponent, TabsViewComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,

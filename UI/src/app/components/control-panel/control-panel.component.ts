@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
 import { map, Observable, of } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
@@ -12,7 +12,7 @@ import { DropdownItem } from '../dropdown/dropdown.component';
 export class ControlPanelComponent implements OnInit {
   private readonly minWidth = 200;
   readonly initialWidth = 450;
-  width = this.initialWidth;
+  _width = this.initialWidth;
 
   piIPAddress = '192.168.1.106';
   _piPort = 8000;
@@ -22,6 +22,8 @@ export class ControlPanelComponent implements OnInit {
 
   cncDropdownOptions: Observable<DropdownItem[]>;
 
+  @Output() controlPanelResize = new EventEmitter<number>()
+
   constructor(public socketService: SocketService) {
     this.cncDropdownOptions = this.socketService.serialPorts$.pipe(
       map((ports) => ports.map((p) => ({ label: p, value: p })))
@@ -29,6 +31,15 @@ export class ControlPanelComponent implements OnInit {
   }
 
   ngOnInit(): void {}
+
+  get width() {
+    return this._width
+  }
+
+  set width(newWidth: number) {
+    this._width = newWidth
+    this.controlPanelResize.emit(this._width)
+  }
 
   onResize(event?: ResizeEvent) {
     let newWidth = event ? event.rectangle.right : this.width;

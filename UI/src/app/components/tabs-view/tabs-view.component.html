@@ -1,0 +1,35 @@
+<div
+  class="absolute top-8 right-0 bottom-0"
+  [ngStyle]="{ left: controlPanelOffset + 'px' }"
+>
+  <!-- <x-tabs class="float-left" (change)="onTabChange($event)">
+    <x-tab [disabled]="!(socketService.activeMachine$ | async)" value="calibration">
+      <x-label>Calibration</x-label>
+    </x-tab>
+    <x-tab disabled value="loadedHeightMap">
+      <x-label>Loaded Height Map</x-label>
+    </x-tab>
+    <x-tab value="rawGCode" selected>
+      <x-label>Raw G-Code</x-label>
+    </x-tab>
+    <x-tab value="contouredGCode">
+      <x-label>Contoured G-Code</x-label>
+    </x-tab>
+  </x-tabs> -->
+  <div class="w-full flex flex-row justify-start border-b-white/30" style="border-bottom-width: 1px;">
+    <x-buttons tracking="1" class="button-tabs">
+      <x-button [disabled]="!(socketService.activeMachine$ | async)">
+        <x-label>Calibration</x-label>
+      </x-button>
+      <x-button>
+        <x-label>Current Height Map</x-label>
+      </x-button>
+      <x-button>
+        <x-label>Raw G Code</x-label>
+      </x-button>
+      <x-button>
+        <x-label>Contoured G Code</x-label>
+      </x-button>
+    </x-buttons>
+  </div>
+</div>
