@@ -25,7 +25,7 @@ export class MenuBarComponent implements OnInit {
       return false
     })
     Mousetrap.bind(['ctrl+o h', 'cmd+o h'], () => {
-      console.log('open height map')
+      this.openHeightMap()
       return false
     })
     Mousetrap.bind(['ctrl+o g', 'cmd+o g'], () => {
@@ -67,9 +67,8 @@ export class MenuBarComponent implements OnInit {
     this.electronService.ipcRenderer.send('close')
   }
 
-  @HostListener('document:keydown.ctrl.q')
-  keyQuit() {
-    this.close()
+  openHeightMap() {
+    this.electronService.ipcRenderer.send('file:open_height_map')
   }
 
 }

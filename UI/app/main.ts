@@ -1,14 +1,13 @@
-import { app, BrowserWindow, screen, ipcMain } from 'electron';
+import { app, BrowserWindow, screen, ipcMain, dialog } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
-  serve = args.some(val => val === '--serve');
+  serve = args.some((val) => val === '--serve');
 
 function createWindow(): BrowserWindow {
-
   const electronScreen = screen;
   const size = electronScreen.getPrimaryDisplay().workAreaSize;
 
@@ -20,8 +19,8 @@ function createWindow(): BrowserWindow {
     height: size.height,
     webPreferences: {
       nodeIntegration: true,
-      allowRunningInsecureContent: (serve) ? true : false,
-      contextIsolation: false,  // false if you want to run e2e test with Spectron
+      allowRunningInsecureContent: serve ? true : false,
+      contextIsolation: false, // false if you want to run e2e test with Spectron
     },
     darkTheme: true,
     frame: false,
@@ -39,15 +38,17 @@ function createWindow(): BrowserWindow {
     let pathIndex = './index.html';
 
     if (fs.existsSync(path.join(__dirname, '../dist/index.html'))) {
-       // Path when running electron in local folder
+      // Path when running electron in local folder
       pathIndex = '../dist/index.html';
     }
 
-    win.loadURL(url.format({
-      pathname: path.join(__dirname, pathIndex),
-      protocol: 'file:',
-      slashes: true
-    }));
+    win.loadURL(
+      url.format({
+        pathname: path.join(__dirname, pathIndex),
+        protocol: 'file:',
+        slashes: true,
+      })
+    );
   }
 
   // Emitted when the window is closed.
@@ -87,37 +88,48 @@ try {
 
   ipcMain.on('minimize', () => {
     if (win) {
-      win.blur()
-      win.minimize()
+      win.blur();
+      win.minimize();
     }
-  })
+  });
 
   ipcMain.on('menubar:ismaximized', () => {
     if (win) {
-      win.webContents.send('menubar:ismaximized', win.isMaximized())
+      win.webContents.send('menubar:ismaximized', win.isMaximized());
     }
-  })
+  });
 
   ipcMain.on('maximize', () => {
     if (win) {
-      win.maximize()
-      win.webContents.send('menubar:ismaximized', true)
+      win.maximize();
+      win.webContents.send('menubar:ismaximized', true);
     }
-  })
+  });
 
   ipcMain.on('unmaximize', () => {
     if (win) {
-      win.unmaximize()
-      win.webContents.send('menubar:ismaximized', false)
+      win.unmaximize();
+      win.webContents.send('menubar:ismaximized', false);
     }
-  })
+  });
 
   ipcMain.on('close', () => {
     if (win) {
-      win.close()
+      win.close();
     }
-  })
+  });
 
+  ipcMain.on('file:open_height_map', () => {
+    if (win) {
+      dialog.showOpenDialog(win, {
+        properties: ['openFile'],
+        filters: [
+          { name: 'Height Map Files', extensions: ['.json', '.map', '.hmap'] },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+    }
+  });
 } catch (e) {
   // Catch Error
   // throw e;

@@ -13,6 +13,8 @@ import { AppRoutingModule } from './app-routing.module';
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import * as PlotlyJS from 'plotly.js-dist-min';
+import { PlotlyModule } from 'angular-plotly.js';
 
 import { AppComponent } from './app.component';
 import { ControlPanelComponent } from './components/control-panel/control-panel.component';
@@ -23,12 +25,16 @@ import { MenuBarComponent } from './components/menu-bar/menu-bar.component';
 import { DividerComponent } from './components/divider/divider.component';
 import { MachineControlButtonComponent } from './components/machine-control-button/machine-control-button.component';
 import { TabsViewComponent } from './components/tabs-view/tabs-view.component';
+import { GcodeRendererComponent } from './components/gcode-renderer/gcode-renderer.component';
+import { CurrentHeightMapComponent } from './views/current-height-map/current-height-map.component';
+
+PlotlyModule.plotlyjs = PlotlyJS;
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
 @NgModule({
-  declarations: [AppComponent, ControlPanelComponent, DropdownComponent, ButtonComponent, InputComponent, MenuBarComponent, DividerComponent, MachineControlButtonComponent, TabsViewComponent],
+  declarations: [AppComponent, ControlPanelComponent, DropdownComponent, ButtonComponent, InputComponent, MenuBarComponent, DividerComponent, MachineControlButtonComponent, TabsViewComponent, GcodeRendererComponent, CurrentHeightMapComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -46,6 +52,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new Transl
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    PlotlyModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

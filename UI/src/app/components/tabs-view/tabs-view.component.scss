@@ -1,3 +1,4 @@
-.button-tabs > x-button:not([toggled]) {
+// :not([toggled]) 
+.button-tabs > x-button {
     border-bottom: none !important;
 }
