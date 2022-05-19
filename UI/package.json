@@ -61,9 +61,12 @@
     "@angular/platform-browser": "13.3.8",
     "@angular/platform-browser-dynamic": "13.3.8",
     "@angular/router": "13.3.8",
+    "angular-resizable-element": "^5.0.0",
     "gcode-preview": "^2.6.1",
+    "ngx-socket-io": "^4.2.0",
     "rxjs": "7.5.5",
     "tslib": "^2.1.0",
+    "xel": "^0.14.0",
     "zone.js": "~0.11.5"
   },
   "devDependencies": {
@@ -86,7 +89,7 @@
     "@typescript-eslint/parser": "5.17.0",
     "autoprefixer": "^10.4.7",
     "conventional-changelog-cli": "2.2.2",
-    "electron": "18.0.1",
+    "electron": "^18.2.3",
     "electron-builder": "22.14.13",
     "electron-debug": "3.2.0",
     "electron-reloader": "1.2.3",

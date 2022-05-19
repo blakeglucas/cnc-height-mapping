@@ -31,7 +31,17 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "fluent.svg",
+                "input": "node_modules/xel/iconsets",
+                "output": "assets"
+              },
+              {
+                "glob": "xel.js",
+                "input": "node_modules/xel",
+                "output": "assets"
+              }
             ],
             "styles": [
               "src/styles.scss"

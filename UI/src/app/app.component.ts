@@ -1,9 +1,10 @@
 import { Component, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { ElectronService } from './services';
+import { ElectronService } from './services/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
 
 import * as GCodePreview from 'gcode-preview'
+import { SocketService } from './services/socket.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,8 @@ export class AppComponent implements AfterViewInit {
 
   constructor(
     private electronService: ElectronService,
-    private translate: TranslateService
+    private translate: TranslateService,
+    public socketService: SocketService,
   ) {
     this.translate.setDefaultLang('en');
     console.log('APP_CONFIG', APP_CONFIG);
@@ -32,18 +34,19 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.gcodePreview = new GCodePreview.WebGLPreview({
-      targetId: 'gcode-preview',
-      buildVolume: {
-        x: 150,
-        y: 150,
-        z: 150,
-      },
-      initialCameraPosition: [0, 400, 450],
-    })
+    // this.gcodePreview = new GCodePreview.WebGLPreview({
+    //   targetId: 'gcode-preview',
+    //   buildVolume: {
+    //     x: 150,
+    //     y: 150,
+    //     z: 150,
+    //   },
+    //   initialCameraPosition: [0, 400, 450],
+    // })
 
-    this.gcodePreview.processGCode('G0 X0 Y0 Z0.2\nG1 X42 Y42')
-    this.gcodePreview.render()
+    // this.gcodePreview.processGCode('G0 X0 Y0 Z0.2\nG1 X42 Y42')
+    // this.gcodePreview.render()
+    // this.socketService.listSerialPorts()
   }
 
   

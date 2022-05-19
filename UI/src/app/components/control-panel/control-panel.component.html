@@ -1,0 +1,108 @@
+<div
+  class="absolute top-8 left-0 bottom-0 bg-neutral-800 overflow-hidden"
+  mwlResizable
+  (resizing)="onResize($event)"
+  [ngStyle]="{ width: width + 'px' }"
+>
+  <a
+    *ngIf="width !== initialWidth"
+    class="absolute top-2 right-4 text-white text-xs cursor-pointer select-none"
+    (click)="resetWidth()"
+    >Reset</a
+  >
+  <div
+    class="resize-handle-right bg-neutral-600 flex flex-col justify-center items-center"
+    mwlResizeHandle
+    [resizeEdges]="{ right: true }"
+  >
+    <mat-icon class="rotate-90 text-neutral-400">drag_handle</mat-icon>
+  </div>
+  <div class="h-full w-full pr-7 pl-4 pt-4 pb-4 overflow-hidden">
+    <div class="grid grid-cols-{{ width >= 400 ? '6' : '1' }} gap-4">
+      <app-input
+        label="Pi IP Address"
+        class="col-span-3 w-full"
+        [value]="piIPAddress"
+        (valueChange)="log($event)"
+        [disabled]="socketService.isConnected"
+      ></app-input>
+      <app-input
+        label="Pi Port"
+        class="col-span-1"
+        [(value)]="piPort"
+        [disabled]="socketService.isConnected"
+      ></app-input>
+      <div
+        class="flex flex-col items-center justify-end w-full h-full col-span-2"
+      >
+        <app-button
+          [label]="socketService.isConnected ? 'Disconnect' : 'Connect'"
+          class="w-full"
+          (click)="connectSocket()"
+        ></app-button>
+      </div>
+    </div>
+    <ng-container *ngIf="socketService.isConnected">
+      <app-divider></app-divider>
+      <div class="grid grid-cols-6 gap-4">
+        <app-dropdown
+          label="CNC Machine Port"
+          class="col-span-{{ width >= 400 ? '2' : '6' }}"
+          [items]="cncDropdownOptions | async"
+          (selectionchange)="cncPort = $event"
+        ></app-dropdown>
+        <app-input
+          label="CNC Baudrate"
+          class="col-span-{{ width >= 400 ? '2' : '6' }}"
+          [value]="cncBaud"
+          (valuechange)="cncBaud = $event"
+        ></app-input>
+        <div
+          class="col-span-{{
+            width >= 400 ? '2' : '6'
+          }} h-full w-full flex flex-col items-center justify-end"
+        >
+          <app-button
+            class="w-full"
+            label="Refresh Ports"
+            (click)="socketService.listSerialPorts()"
+          ></app-button>
+        </div>
+        <p *ngIf="socketService.activeMachine$ | async" class="text-sm text-white col-span-6">
+          Active Machine: {{ socketService.activeMachine$ | async }}
+        </p>
+      </div>
+      <div class="flex flex-row justify-center items-center my-4">
+        <app-button
+          label="Set Active Machine"
+          class=""
+          (click)="setActiveMachine()"
+          [disabled]="!cncPort"
+        ></app-button>
+      </div>
+      <ng-container *ngIf="socketService.activeMachine$ | async">
+        <app-divider></app-divider>
+        <div class="grid grid-cols-3 gap-6 space-y-8">
+          <div class="flex flex-row justify-center items-center col-start-2">
+            <app-machine-control-button iconName="chevron-left" [rotate]="true"></app-machine-control-button>
+          </div>
+          <div></div>
+          <div
+            class="flex flex-row justify-center items-center col-start-1 row-start-2"
+          >
+           <app-machine-control-button iconName="chevron-left"></app-machine-control-button>
+          </div>
+          <div class="flex flex-row justify-center items-center">
+            <app-machine-control-button iconName="home" (click)="socketService.machineHome()" [loading]="socketService.homing$ | async"></app-machine-control-button>
+          </div>
+          <div class="flex flex-row justify-center items-center">
+            <app-machine-control-button iconName="chevron-right"></app-machine-control-button>
+          </div>
+          <div class="flex flex-row justify-center items-center col-start-2">
+            <app-machine-control-button iconName="chevron-right" [rotate]="true"></app-machine-control-button>
+          </div>
+        </div>
+      </ng-container>
+    </ng-container>
+  </div>
+</div>

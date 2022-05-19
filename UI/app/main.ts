@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron';
+import { app, BrowserWindow, screen, ipcMain } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
@@ -23,6 +23,9 @@ function createWindow(): BrowserWindow {
       allowRunningInsecureContent: (serve) ? true : false,
       contextIsolation: false,  // false if you want to run e2e test with Spectron
     },
+    darkTheme: true,
+    frame: false,
+    transparent: false,
   });
 
   if (serve) {
@@ -81,6 +84,39 @@ try {
       createWindow();
     }
   });
+
+  ipcMain.on('minimize', () => {
+    if (win) {
+      win.blur()
+      win.minimize()
+    }
+  })
+
+  ipcMain.on('menubar:ismaximized', () => {
+    if (win) {
+      win.webContents.send('menubar:ismaximized', win.isMaximized())
+    }
+  })
+
+  ipcMain.on('maximize', () => {
+    if (win) {
+      win.maximize()
+      win.webContents.send('menubar:ismaximized', true)
+    }
+  })
+
+  ipcMain.on('unmaximize', () => {
+    if (win) {
+      win.unmaximize()
+      win.webContents.send('menubar:ismaximized', false)
+    }
+  })
+
+  ipcMain.on('close', () => {
+    if (win) {
+      win.close()
+    }
+  })
 
 } catch (e) {
   // Catch Error
