@@ -1,3 +1,2 @@
-<plotly-plot [data]="[data]" [layout]="layout" [config]="config" [useResizeHandler]="true">
-
-</plotly-plot>
+<p *ngIf="!(heightMapService.currentHeightMap$ | async)">No current height map loaded. Use File > Load Height Map, or press <x-shortcut value="Control+O H"></x-shortcut></p>
+<plotly-plot *ngIf="(heightMapService.currentHeightMap$ | async)" [data]="[data]" [layout]="layout" [config]="config" [useResizeHandler]="true"></plotly-plot>

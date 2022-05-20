@@ -119,15 +119,51 @@ try {
     }
   });
 
-  ipcMain.on('file:open_height_map', () => {
+  ipcMain.on('file:open_height_map', async () => {
     if (win) {
-      dialog.showOpenDialog(win, {
+      const result = await dialog.showOpenDialog(win, {
         properties: ['openFile'],
         filters: [
-          { name: 'Height Map Files', extensions: ['.json', '.map', '.hmap'] },
+          { name: 'Height Map Files', extensions: ['json', 'map', 'hmap'] },
           { name: 'All Files', extensions: ['*'] },
         ],
       });
+      if (!result.canceled) {
+        const contents = await fs.promises.readFile(result.filePaths[0])
+        win.webContents.send('file:open_height_map', contents.toString())
+      }
+    }
+  });
+
+  ipcMain.on('file:open_raw_gcode', async () => {
+    if (win) {
+      const result = await dialog.showOpenDialog(win, {
+        properties: ['openFile'],
+        filters: [
+          { name: 'G-Code Files', extensions: ['gcode', 'cnc', 'nc'] },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+      if (!result.canceled) {
+        const contents = await fs.promises.readFile(result.filePaths[0])
+        win.webContents.send('file:open_raw_gcode', contents.toString())
+      }
+    }
+  });
+
+  ipcMain.on('file:open_contoured_gcode', async () => {
+    if (win) {
+      const result = await dialog.showOpenDialog(win, {
+        properties: ['openFile'],
+        filters: [
+          { name: 'G-Code Files', extensions: ['cgcode', 'gcode', 'cnc', 'nc'] },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+      if (!result.canceled) {
+        const contents = await fs.promises.readFile(result.filePaths[0])
+        win.webContents.send('file:open_contoured_gcode', contents.toString())
+      }
     }
   });
 } catch (e) {

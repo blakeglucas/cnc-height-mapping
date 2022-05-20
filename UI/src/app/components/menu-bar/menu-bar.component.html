@@ -9,15 +9,15 @@
                         <x-shortcut value="Control+O P"></x-shortcut>
                     </x-menuitem>
                     <hr>
-                    <x-menuitem>
+                    <x-menuitem (click)="openHeightMap()">
                         <x-label>Load Height Map File</x-label>
                         <x-shortcut value="Control+O H"></x-shortcut>
                     </x-menuitem>
-                    <x-menuitem>
+                    <x-menuitem (click)="openRawGCode()">
                         <x-label>Load Raw G-Code File</x-label>
                         <x-shortcut value="Control+O G"></x-shortcut>
                     </x-menuitem>
-                    <x-menuitem>
+                    <x-menuitem (click)="openCGCode()">
                         <x-label>Load Contoured G-Code File</x-label>
                         <x-shortcut value="Control+O C"></x-shortcut>
                     </x-menuitem>

@@ -29,11 +29,11 @@ export class MenuBarComponent implements OnInit {
       return false
     })
     Mousetrap.bind(['ctrl+o g', 'cmd+o g'], () => {
-      console.log('open raw gcode')
+      this.openRawGCode()
       return false
     })
     Mousetrap.bind(['ctrl+o c', 'cmd+o c'], () => {
-      console.log('open contoured gcode')
+      this.openCGCode()
       return false
     })
     Mousetrap.bind(['ctrl+s', 'cmd+s'], () => {
@@ -69,6 +69,14 @@ export class MenuBarComponent implements OnInit {
 
   openHeightMap() {
     this.electronService.ipcRenderer.send('file:open_height_map')
+  }
+
+  openRawGCode() {
+    this.electronService.ipcRenderer.send('file:open_raw_gcode')
+  }
+
+  openCGCode() {
+    this.electronService.ipcRenderer.send('file:open_contoured_gcode')
   }
 
 }

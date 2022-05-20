@@ -1,4 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, HostListener, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { GcodeService } from '../../services/gcode.service';
 import { SocketService } from '../../services/socket.service';
 
 @Component({
@@ -16,7 +17,9 @@ export class TabsViewComponent implements OnInit, AfterViewInit, OnChanges {
   contentWidth = 620
   contentHeight = 480
 
-  constructor(public socketService: SocketService, private cdr: ChangeDetectorRef) { }
+  constructor(public socketService: SocketService, public gCodeService: GcodeService, private cdr: ChangeDetectorRef) { }
+
+  currentTab = ''
 
   ngAfterViewInit(): void {
   }
@@ -25,10 +28,6 @@ export class TabsViewComponent implements OnInit, AfterViewInit, OnChanges {
     setTimeout(() => {
       this.getContentSize()
     }, 50)
-  }
-
-  onTabChange(a: any) {
-    console.log(a)
   }
 
   @HostListener('window:resize')
@@ -43,8 +42,12 @@ export class TabsViewComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes)
     setTimeout(() => this.getContentSize(), 10)
+  }
+
+  onTabChange(a: Event) {
+    const event = a as CustomEvent
+    this.currentTab = event.detail.value
   }
 
 }

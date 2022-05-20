@@ -20,7 +20,6 @@ export class DropdownComponent implements OnInit {
   currentSelection = ''
 
   constructor() {
-    console.log(this.items)
   }
 
   ngOnInit(): void {
