@@ -208,15 +208,19 @@ export class GcodeRendererComponent
     } else if (this.gCodeType == 'contoured') {
       this.gCodeService.clearCGCode();
     }
-    this.cdr.detectChanges()
+    this.cdr.detectChanges();
   }
 
   performContour() {
     if (this.gCodeType === 'contoured') {
-      return
+      return;
     }
-    const gCodeLines = contourGCode(new GCodeObject(this.gCode), this.heightMapService.currentHeightMap, -1).filter(a => !!a)
-    const cGCode = gCodeLines.map(line => line.repr()).join('\n')
-    this.gCodeService.setCGCode(cGCode)
+    const gCodeLines = contourGCode(
+      new GCodeObject(this.gCode),
+      this.heightMapService.currentHeightMap,
+      -1
+    ).filter((a) => !!a);
+    const cGCode = gCodeLines.map((line) => line.repr()).join('\n');
+    this.gCodeService.setCGCode(cGCode);
   }
 }

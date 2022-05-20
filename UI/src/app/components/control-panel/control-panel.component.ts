@@ -1,4 +1,10 @@
-import { Component, EventEmitter, HostListener, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
 import { map, Observable, of } from 'rxjs';
 import { SocketService } from '../../services/socket.service';
@@ -17,12 +23,12 @@ export class ControlPanelComponent implements OnInit {
   piIPAddress = '192.168.1.106';
   _piPort = 8000;
 
-  cncPort = ''
-  _cncBaud = 115200
+  cncPort = '';
+  _cncBaud = 115200;
 
   cncDropdownOptions: Observable<DropdownItem[]>;
 
-  @Output() controlPanelResize = new EventEmitter<number>()
+  @Output() controlPanelResize = new EventEmitter<number>();
 
   constructor(public socketService: SocketService) {
     this.cncDropdownOptions = this.socketService.serialPorts$.pipe(
@@ -33,12 +39,12 @@ export class ControlPanelComponent implements OnInit {
   ngOnInit(): void {}
 
   get width() {
-    return this._width
+    return this._width;
   }
 
   set width(newWidth: number) {
-    this._width = newWidth
-    this.controlPanelResize.emit(this._width)
+    this._width = newWidth;
+    this.controlPanelResize.emit(this._width);
   }
 
   onResize(event?: ResizeEvent) {
@@ -57,7 +63,7 @@ export class ControlPanelComponent implements OnInit {
   }
 
   log(a: any) {
-    console.log(a)
+    console.log(a);
   }
 
   @HostListener('window:resize')
@@ -66,7 +72,7 @@ export class ControlPanelComponent implements OnInit {
   }
 
   connectSocket() {
-    console.log(this.piIPAddress, this.piPort)
+    console.log(this.piIPAddress, this.piPort);
     if (this.socketService.isConnected) {
       this.socketService.disconnectSocket();
     } else {
@@ -76,8 +82,8 @@ export class ControlPanelComponent implements OnInit {
   }
 
   setActiveMachine() {
-    this.socketService.setActivePort(this.cncPort, this.cncBaud)
-    this.socketService.getActiveMachine()
+    this.socketService.setActivePort(this.cncPort, this.cncBaud);
+    this.socketService.getActiveMachine();
   }
 
   get piPort() {

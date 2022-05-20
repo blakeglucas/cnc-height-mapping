@@ -5,14 +5,14 @@
 @tailwind components;
 @tailwind utilities;
 
-html, body {
+html,
+body {
   height: 100%;
 }
 
 body {
   margin: 0;
 }
-
 
 x-* {
   max-width: unset !important;

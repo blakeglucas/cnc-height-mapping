@@ -1,12 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CUSTOM_ELEMENTS_SCHEMA, forwardRef, NgModule } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
-import { ResizableModule } from 'angular-resizable-element'
-import { MatIconModule } from '@angular/material/icon'
-import { MatButtonModule } from '@angular/material/button'
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner'
+import { ResizableModule } from 'angular-resizable-element';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -31,10 +31,23 @@ import { CurrentHeightMapComponent } from './views/current-height-map/current-he
 PlotlyModule.plotlyjs = PlotlyJS;
 
 // AoT requires an exported function for factories
-const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new TranslateHttpLoader(http, './assets/i18n/', '.json');
+const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
+  new TranslateHttpLoader(http, './assets/i18n/', '.json');
 
 @NgModule({
-  declarations: [AppComponent, ControlPanelComponent, DropdownComponent, ButtonComponent, InputComponent, MenuBarComponent, DividerComponent, MachineControlButtonComponent, TabsViewComponent, GcodeRendererComponent, CurrentHeightMapComponent],
+  declarations: [
+    AppComponent,
+    ControlPanelComponent,
+    DropdownComponent,
+    ButtonComponent,
+    InputComponent,
+    MenuBarComponent,
+    DividerComponent,
+    MachineControlButtonComponent,
+    TabsViewComponent,
+    GcodeRendererComponent,
+    CurrentHeightMapComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -45,8 +58,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new Transl
       loader: {
         provide: TranslateLoader,
         useFactory: httpLoaderFactory,
-        deps: [HttpClient]
-      }
+        deps: [HttpClient],
+      },
     }),
     ResizableModule,
     MatIconModule,
@@ -56,8 +69,6 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>  new Transl
   ],
   providers: [],
   bootstrap: [AppComponent],
-  schemas: [
-      CUSTOM_ELEMENTS_SCHEMA
-  ]
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class AppModule {}

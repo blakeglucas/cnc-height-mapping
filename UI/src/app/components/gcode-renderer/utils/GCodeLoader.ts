@@ -97,7 +97,7 @@ export class GCodeLoader extends THREE.Loader {
         y: undefined,
         z: undefined,
         e: undefined,
-        f: undefined
+        f: undefined,
       };
       tokens.splice(1).forEach(function (token) {
         if (token[0] !== undefined) {
@@ -126,8 +126,13 @@ export class GCodeLoader extends THREE.Loader {
         }
 
         addSegment(state, line);
-        state = {...state, ...line};
-      } else if (cmd === 'G2' || cmd === 'G3' || cmd === 'G02' || cmd === 'G03') {
+        state = { ...state, ...line };
+      } else if (
+        cmd === 'G2' ||
+        cmd === 'G3' ||
+        cmd === 'G02' ||
+        cmd === 'G03'
+      ) {
         //G2/G3 - Arc Movement ( G2 clock wise and G3 counter clock wise )
         //console.warn( 'THREE.GCodeLoader: Arc command not supported' );
       } else if (cmd === 'G90') {

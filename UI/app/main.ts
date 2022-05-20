@@ -129,8 +129,8 @@ try {
         ],
       });
       if (!result.canceled) {
-        const contents = await fs.promises.readFile(result.filePaths[0])
-        win.webContents.send('file:open_height_map', contents.toString())
+        const contents = await fs.promises.readFile(result.filePaths[0]);
+        win.webContents.send('file:open_height_map', contents.toString());
       }
     }
   });
@@ -145,8 +145,8 @@ try {
         ],
       });
       if (!result.canceled) {
-        const contents = await fs.promises.readFile(result.filePaths[0])
-        win.webContents.send('file:open_raw_gcode', contents.toString())
+        const contents = await fs.promises.readFile(result.filePaths[0]);
+        win.webContents.send('file:open_raw_gcode', contents.toString());
       }
     }
   });
@@ -156,41 +156,49 @@ try {
       const result = await dialog.showOpenDialog(win, {
         properties: ['openFile'],
         filters: [
-          { name: 'G-Code Files', extensions: ['cgcode', 'gcode', 'cnc', 'nc'] },
+          {
+            name: 'G-Code Files',
+            extensions: ['cgcode', 'gcode', 'cnc', 'nc'],
+          },
           { name: 'All Files', extensions: ['*'] },
         ],
       });
       if (!result.canceled) {
-        const contents = await fs.promises.readFile(result.filePaths[0])
-        win.webContents.send('file:open_contoured_gcode', contents.toString())
+        const contents = await fs.promises.readFile(result.filePaths[0]);
+        win.webContents.send('file:open_contoured_gcode', contents.toString());
       }
     }
   });
 
   ipcMain.on('file:save_cgcode', async (event, gcode) => {
     if (win) {
-      const result = await dialog.showSaveDialog(win, { filters: [
-        {name: 'Contoured G-Code File', extensions:['cgcode']},
-        {
-          name: 'G-Code File', extensions: ['gcode']
-        },
-        {
-          name: 'CNC File', extensions: ['cnc'],
-        },
-        {
-          name: 'Laser Engraving File', extensions: ['nc']
-        },
-        {
-          name: 'All Files', extensions: ['*']
-        }
-      ]})
+      const result = await dialog.showSaveDialog(win, {
+        filters: [
+          { name: 'Contoured G-Code File', extensions: ['cgcode'] },
+          {
+            name: 'G-Code File',
+            extensions: ['gcode'],
+          },
+          {
+            name: 'CNC File',
+            extensions: ['cnc'],
+          },
+          {
+            name: 'Laser Engraving File',
+            extensions: ['nc'],
+          },
+          {
+            name: 'All Files',
+            extensions: ['*'],
+          },
+        ],
+      });
       if (!result.canceled) {
-        const fpath = result.filePath
-        await fs.promises.writeFile(fpath, gcode)
+        const fpath = result.filePath;
+        await fs.promises.writeFile(fpath, gcode);
       }
     }
-    
-  })
+  });
 } catch (e) {
   // Catch Error
   // throw e;

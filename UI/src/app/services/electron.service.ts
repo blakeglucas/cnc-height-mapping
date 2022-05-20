@@ -9,7 +9,7 @@ import { HeightMapService } from './height-map.service';
 import { GcodeService } from './gcode.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ElectronService {
   ipcRenderer: typeof ipcRenderer;
@@ -17,7 +17,10 @@ export class ElectronService {
   childProcess: typeof childProcess;
   fs: typeof fs;
 
-  constructor(private heightMapService: HeightMapService, private gCodeService: GcodeService) {
+  constructor(
+    private heightMapService: HeightMapService,
+    private gCodeService: GcodeService
+  ) {
     // Conditional imports
     if (this.isElectron) {
       this.ipcRenderer = window.require('electron').ipcRenderer;
@@ -27,16 +30,19 @@ export class ElectronService {
       this.fs = window.require('fs');
 
       this.ipcRenderer.on('file:open_height_map', (event, fileContents) => {
-        this.heightMapService.processHeightMapFile(fileContents)
-      })
+        this.heightMapService.processHeightMapFile(fileContents);
+      });
 
       this.ipcRenderer.on('file:open_raw_gcode', (event, fileContents) => {
-        this.gCodeService.setRawGCode(fileContents)
-      })
+        this.gCodeService.setRawGCode(fileContents);
+      });
 
-      this.ipcRenderer.on('file:open_contoured_gcode', (event, fileContents) => {
-        this.gCodeService.setCGCode(fileContents)
-      })
+      this.ipcRenderer.on(
+        'file:open_contoured_gcode',
+        (event, fileContents) => {
+          this.gCodeService.setCGCode(fileContents);
+        }
+      );
 
       // Notes :
       // * A NodeJS's dependency imported with 'window.require' MUST BE present in `dependencies` of both `app/package.json`

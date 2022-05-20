@@ -8,9 +8,8 @@ describe('MachineControlButtonComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ MachineControlButtonComponent ]
-    })
-    .compileComponents();
+      declarations: [MachineControlButtonComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

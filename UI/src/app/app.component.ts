@@ -1,18 +1,23 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnInit,
+} from '@angular/core';
 import { ElectronService } from './services/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
 
-import * as GCodePreview from 'gcode-preview'
+import * as GCodePreview from 'gcode-preview';
 import { SocketService } from './services/socket.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit {
-
   gcodePreview: GCodePreview.WebGLPreview;
 
   controlPanelWidth = 450;
@@ -20,7 +25,7 @@ export class AppComponent implements AfterViewInit {
   constructor(
     private electronService: ElectronService,
     private translate: TranslateService,
-    public socketService: SocketService,
+    public socketService: SocketService
   ) {
     this.translate.setDefaultLang('en');
     console.log('APP_CONFIG', APP_CONFIG);
@@ -45,15 +50,12 @@ export class AppComponent implements AfterViewInit {
     //   },
     //   initialCameraPosition: [0, 400, 450],
     // })
-
     // this.gcodePreview.processGCode('G0 X0 Y0 Z0.2\nG1 X42 Y42')
     // this.gcodePreview.render()
     // this.socketService.listSerialPorts()
   }
 
   onControlPanelResize(newWidth: number) {
-    this.controlPanelWidth = newWidth
+    this.controlPanelWidth = newWidth;
   }
-
-  
 }

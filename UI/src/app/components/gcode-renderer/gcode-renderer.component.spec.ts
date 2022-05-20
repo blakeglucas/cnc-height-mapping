@@ -8,9 +8,8 @@ describe('GcodeRendererComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GcodeRendererComponent ]
-    })
-    .compileComponents();
+      declarations: [GcodeRendererComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {

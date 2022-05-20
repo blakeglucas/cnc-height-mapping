@@ -89,7 +89,7 @@ export class Controls extends EventEmitter {
 
   prevState = null;
 
-  touched = false
+  touched = false;
 
   constructor(camera, group, domElement) {
     super();
@@ -184,7 +184,7 @@ export class Controls extends EventEmitter {
   onMouseDown = (event) => {
     // Prevent the browser from scrolling.
     event.preventDefault();
-    this.touched = true
+    this.touched = true;
     this.mouseDownPosition = this.getMouseCoord(event);
     // mousedown on support mode
     this.prevState = null;

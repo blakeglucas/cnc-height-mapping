@@ -37,8 +37,8 @@ export class CurrentHeightMapComponent implements OnInit, OnChanges, OnDestroy {
       tickcolor: 'white',
       tickfont: {
         color: 'white',
-      }
-    }
+      },
+    },
   };
 
   readonly config = {
@@ -61,49 +61,58 @@ export class CurrentHeightMapComponent implements OnInit, OnChanges, OnDestroy {
     title: {
       font: {
         color: 'white',
-      }
+      },
     },
     scene: {
       xaxis: {
-        color: 'white'
+        color: 'white',
       },
       yaxis: {
-        color: 'white', 
+        color: 'white',
       },
       zaxis: {
         color: 'white',
-      }
+      },
     },
   };
 
   currentHeightMapSubscription: Subscription;
 
-  constructor(public heightMapService: HeightMapService, private cdr: ChangeDetectorRef) {
-    this.currentHeightMapSubscription = this.heightMapService.currentHeightMap$.subscribe({
-      next: currentHeightMap => {
-        if (currentHeightMap) {
-          this.data.x = Array.from(new Set(currentHeightMap.map((a) => a[0]).sort()));
-          this.data.y = Array.from(new Set(currentHeightMap.map((a) => a[1]).sort()));
-          const z_values = currentHeightMap.map((a) => a[2]);
-          // this.data.cmin = Math.min(...z_values)
-          // this.data.cmax = Math.max(...z_values)
-          const z_mat = z_values.reduce(
-            (rows, key, index) =>
-              (index % 3 == 0 ? rows.push([key]) : rows[rows.length - 1].push(key)) &&
-              rows,
-            []
-          );
-          this.data.z = z_mat;
-          this.data.surfacecolor = z_mat.map((row) => row.map((a) => Math.abs(a)));
-          this.cdr.detectChanges()
-        }
-      }
-    })
+  constructor(
+    public heightMapService: HeightMapService,
+    private cdr: ChangeDetectorRef
+  ) {
+    this.currentHeightMapSubscription =
+      this.heightMapService.currentHeightMap$.subscribe({
+        next: (currentHeightMap) => {
+          if (currentHeightMap) {
+            this.data.x = Array.from(
+              new Set(currentHeightMap.map((a) => a[0]).sort())
+            );
+            this.data.y = Array.from(
+              new Set(currentHeightMap.map((a) => a[1]).sort())
+            );
+            const z_values = currentHeightMap.map((a) => a[2]);
+            // this.data.cmin = Math.min(...z_values)
+            // this.data.cmax = Math.max(...z_values)
+            const z_mat = z_values.reduce(
+              (rows, key, index) =>
+                (index % 3 == 0
+                  ? rows.push([key])
+                  : rows[rows.length - 1].push(key)) && rows,
+              []
+            );
+            this.data.z = z_mat;
+            this.data.surfacecolor = z_mat.map((row) =>
+              row.map((a) => Math.abs(a))
+            );
+            this.cdr.detectChanges();
+          }
+        },
+      });
   }
 
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.layout = {
@@ -116,7 +125,7 @@ export class CurrentHeightMapComponent implements OnInit, OnChanges, OnDestroy {
 
   ngOnDestroy(): void {
     if (this.currentHeightMapSubscription) {
-      this.currentHeightMapSubscription.unsubscribe()
+      this.currentHeightMapSubscription.unsubscribe();
     }
   }
 }

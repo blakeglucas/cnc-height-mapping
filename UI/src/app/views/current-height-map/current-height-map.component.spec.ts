@@ -8,9 +8,8 @@ describe('CurrentHeightMapComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ CurrentHeightMapComponent ]
-    })
-    .compileComponents();
+      declarations: [CurrentHeightMapComponent],
+    }).compileComponents();
   });
 
   beforeEach(() => {
