@@ -76,7 +76,6 @@ export class ControlPanelComponent implements OnInit {
   }
 
   setActiveMachine() {
-    console.log(this.cncPort)
     this.socketService.setActivePort(this.cncPort, this.cncBaud)
     this.socketService.getActiveMachine()
   }

@@ -166,6 +166,31 @@ try {
       }
     }
   });
+
+  ipcMain.on('file:save_cgcode', async (event, gcode) => {
+    if (win) {
+      const result = await dialog.showSaveDialog(win, { filters: [
+        {name: 'Contoured G-Code File', extensions:['cgcode']},
+        {
+          name: 'G-Code File', extensions: ['gcode']
+        },
+        {
+          name: 'CNC File', extensions: ['cnc'],
+        },
+        {
+          name: 'Laser Engraving File', extensions: ['nc']
+        },
+        {
+          name: 'All Files', extensions: ['*']
+        }
+      ]})
+      if (!result.canceled) {
+        const fpath = result.filePath
+        await fs.promises.writeFile(fpath, gcode)
+      }
+    }
+    
+  })
 } catch (e) {
   // Catch Error
   // throw e;

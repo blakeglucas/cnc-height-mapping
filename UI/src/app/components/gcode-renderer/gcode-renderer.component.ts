@@ -22,6 +22,7 @@ import { TextSprite } from './utils/TextSprite';
 import { HeightMapService } from '../../services/height-map.service';
 import { ElectronService } from '../../services/electron.service';
 import { GcodeService } from '../../services/gcode.service';
+import { contourGCode, GCodeObject } from '../../utils/contourGCode';
 
 @Component({
   selector: 'app-gcode-renderer',
@@ -208,5 +209,14 @@ export class GcodeRendererComponent
       this.gCodeService.clearCGCode();
     }
     this.cdr.detectChanges()
+  }
+
+  performContour() {
+    if (this.gCodeType === 'contoured') {
+      return
+    }
+    const gCodeLines = contourGCode(new GCodeObject(this.gCode), this.heightMapService.currentHeightMap, -1).filter(a => !!a)
+    const cGCode = gCodeLines.map(line => line.repr()).join('\n')
+    this.gCodeService.setCGCode(cGCode)
   }
 }

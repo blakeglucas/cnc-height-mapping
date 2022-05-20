@@ -1,6 +1,7 @@
 import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import * as Mousetrap from 'mousetrap';
 import { ElectronService } from '../../services/electron.service';
+import { GcodeService } from '../../services/gcode.service';
 
 @Component({
   selector: 'app-menu-bar',
@@ -11,7 +12,7 @@ export class MenuBarComponent implements OnInit {
 
   isMaximized = false
 
-  constructor(private electronService: ElectronService, private cdr: ChangeDetectorRef) {
+  constructor(private electronService: ElectronService, private gCodeService: GcodeService, private cdr: ChangeDetectorRef) {
     this.electronService.ipcRenderer.on('menubar:ismaximized', (event, isMaximized) => {
       this.isMaximized = isMaximized
       this.cdr.detectChanges()
@@ -34,6 +35,10 @@ export class MenuBarComponent implements OnInit {
     })
     Mousetrap.bind(['ctrl+o c', 'cmd+o c'], () => {
       this.openCGCode()
+      return false
+    })
+    Mousetrap.bind(['ctrl+e', 'cmd+e'], () => {
+      this.saveCGCode()
       return false
     })
     Mousetrap.bind(['ctrl+s', 'cmd+s'], () => {
@@ -77,6 +82,10 @@ export class MenuBarComponent implements OnInit {
 
   openCGCode() {
     this.electronService.ipcRenderer.send('file:open_contoured_gcode')
+  }
+
+  saveCGCode() {
+    this.electronService.ipcRenderer.send('file:save_cgcode', this.gCodeService.cGCode)
   }
 
 }

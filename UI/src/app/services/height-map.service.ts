@@ -16,6 +16,10 @@ export class HeightMapService {
     this.processHeightMapFile = this.processHeightMapFile.bind(this)
   }
 
+  get currentHeightMap() {
+    return this._currentHeightMap.getValue()
+  }
+
   processHeightMapFile(contents: string) {
     try {
       const data = JSON.parse(contents)
@@ -33,7 +37,6 @@ export class HeightMapService {
 
   private normalize(data: number[][] | number[][][]) {
     if (Array.isArray(data[0][0])) {
-      console.log(data.flat())
       return data.flat() as number[][]
     } else {
       return data as number[][];

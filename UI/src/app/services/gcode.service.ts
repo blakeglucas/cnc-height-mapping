@@ -14,6 +14,10 @@ export class GcodeService {
 
   constructor() { }
 
+  get cGCode() {
+    return this._cGCode.getValue()
+  }
+
   setRawGCode(g: string) {
     if (g) {
       // TODO Validate
