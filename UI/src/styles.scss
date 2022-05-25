@@ -17,3 +17,13 @@ body {
 x-* {
   max-width: unset !important;
 }
+
+.mat-simple-snackbar {
+  @apply font-sans;
+}
+
+.mat-simple-snackbar-action {
+  button {
+    @apply font-sans text-white text-xs;
+  }
+}

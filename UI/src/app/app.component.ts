@@ -9,7 +9,6 @@ import { ElectronService } from './services/electron.service';
 import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
 
-import * as GCodePreview from 'gcode-preview';
 import { SocketService } from './services/socket.service';
 
 @Component({
@@ -18,8 +17,6 @@ import { SocketService } from './services/socket.service';
   styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements AfterViewInit {
-  gcodePreview: GCodePreview.WebGLPreview;
-
   controlPanelWidth = 450;
 
   constructor(

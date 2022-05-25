@@ -23,7 +23,7 @@ export class InputComponent implements OnInit, AfterViewInit {
   @Input() disabled = false;
   @Input() label;
 
-  @Input() value = '';
+  @Input() value: string | number = '';
   @Output() valueChange = new EventEmitter();
 
   constructor(private cdr: ChangeDetectorRef) {}
@@ -37,7 +37,12 @@ export class InputComponent implements OnInit, AfterViewInit {
   }
 
   onChange(event: Event) {
-    const value = (event.target as HTMLInputElement).value;
-    this.valueChange.emit(value);
+    console.log((event.target as HTMLInputElement).value);
+    if (typeof this.value === 'number') {
+      const nVal = Number((event.target as HTMLInputElement).value);
+      this.valueChange.emit(nVal);
+    } else {
+      this.valueChange.emit((event.target as HTMLInputElement).value);
+    }
   }
 }

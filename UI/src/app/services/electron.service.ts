@@ -7,6 +7,8 @@ import * as childProcess from 'child_process';
 import * as fs from 'fs';
 import { HeightMapService } from './height-map.service';
 import { GcodeService } from './gcode.service';
+import { SerialService } from './serial.service';
+import type { PortInfo } from '@serialport/bindings-interface';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +21,8 @@ export class ElectronService {
 
   constructor(
     private heightMapService: HeightMapService,
-    private gCodeService: GcodeService
+    private gCodeService: GcodeService,
+    private serialService: SerialService
   ) {
     // Conditional imports
     if (this.isElectron) {
@@ -44,6 +47,12 @@ export class ElectronService {
         }
       );
 
+      this.ipcRenderer.on('serial:list_ports', (event, ports: PortInfo[]) => {
+        this.serialService.availablePorts = ports;
+      });
+
+      this.getAvailableSerialPorts();
+
       // Notes :
       // * A NodeJS's dependency imported with 'window.require' MUST BE present in `dependencies` of both `app/package.json`
       // and `package.json (root folder)` in order to make it work here in Electron's Renderer process (src folder)
@@ -60,5 +69,9 @@ export class ElectronService {
 
   get isElectron(): boolean {
     return !!(window && window.process && window.process.type);
+  }
+
+  getAvailableSerialPorts() {
+    this.ipcRenderer.send('serial:list_ports');
   }
 }

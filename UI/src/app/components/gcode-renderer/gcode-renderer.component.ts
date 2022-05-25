@@ -10,15 +10,15 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 
-import { CoordinateAxes } from './utils/CoordinateAxes';
+import { CoordinateAxes } from '../../utils/threejs/CoordinateAxes';
 
 import * as THREE from 'three';
-import { GCodeLoader } from './utils/GCodeLoader';
+import { GCodeLoader } from '../../utils/threejs/GCodeLoader';
 
-import { Controls } from './utils/Controls';
-import { GridLines } from './utils/GridLines';
+import { Controls } from '../../utils/threejs/Controls';
+import { GridLines } from '../../utils/threejs/GridLines';
 import colornames from 'colornames';
-import { TextSprite } from './utils/TextSprite';
+import { TextSprite } from '../../utils/threejs/TextSprite';
 import { HeightMapService } from '../../services/height-map.service';
 import { ElectronService } from '../../services/electron.service';
 import { GcodeService } from '../../services/gcode.service';

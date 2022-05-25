@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   HostListener,
@@ -7,6 +8,8 @@ import {
 } from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
 import { map, Observable, of } from 'rxjs';
+import { ElectronService } from '../../services/electron.service';
+import { SerialService } from '../../services/serial.service';
 import { SocketService } from '../../services/socket.service';
 import { DropdownItem } from '../dropdown/dropdown.component';
 
@@ -20,19 +23,36 @@ export class ControlPanelComponent implements OnInit {
   readonly initialWidth = 450;
   _width = this.initialWidth;
 
+  usePiConnection = false;
   piIPAddress = '192.168.1.106';
   _piPort = 8000;
 
-  cncPort = '';
+  _cncPort = '';
   _cncBaud = 115200;
+  _switchPort = '';
+  _switchBaud = 9600;
 
   cncDropdownOptions: Observable<DropdownItem[]>;
+  localSerialDropdownOptions: Observable<DropdownItem[]>;
 
   @Output() controlPanelResize = new EventEmitter<number>();
 
-  constructor(public socketService: SocketService) {
+  constructor(
+    public socketService: SocketService,
+    public serialService: SerialService,
+    private electronService: ElectronService,
+    private cdr: ChangeDetectorRef
+  ) {
     this.cncDropdownOptions = this.socketService.serialPorts$.pipe(
       map((ports) => ports.map((p) => ({ label: p, value: p })))
+    );
+    this.localSerialDropdownOptions = this.serialService.availablePorts$.pipe(
+      map((ports) =>
+        ports.map((p) => ({
+          label: p.path,
+          value: p.path,
+        }))
+      )
     );
   }
 
@@ -94,11 +114,56 @@ export class ControlPanelComponent implements OnInit {
     this._piPort = Number(val);
   }
 
+  get cncPort() {
+    return this._cncPort;
+  }
+
+  set cncPort(port: string) {
+    this._cncPort = port;
+    this.createCNCSerial();
+  }
+
   get cncBaud() {
     return this._cncBaud;
   }
 
   set cncBaud(val: any) {
     this._cncBaud = Number(val);
+    this.createCNCSerial();
+  }
+
+  get switchPort() {
+    return this._switchPort;
+  }
+
+  set switchPort(port: string) {
+    this._switchPort = port;
+    this.createSwitchSerial();
+  }
+
+  get switchBaud() {
+    return this._switchBaud;
+  }
+
+  set switchBaud(val: any) {
+    this._switchBaud = Number(val);
+    this.createSwitchSerial();
+  }
+
+  async createCNCSerial() {
+    await this.serialService.setCNCPort(this._cncPort, this._cncBaud);
+  }
+
+  async createSwitchSerial() {
+    await this.serialService.setSwitchPort(this._switchPort, this._switchBaud);
+  }
+
+  onConnectionChange() {
+    this.usePiConnection = !this.usePiConnection;
+    this.cdr.detectChanges();
+  }
+
+  refreshSerialPorts() {
+    this.electronService.getAvailableSerialPorts();
   }
 }

@@ -1,0 +1,52 @@
+<!-- Container -->
+<div
+  [ngStyle]="{ width: width + 'px', height: height + 'px' }"
+  class="flex flex-col items-center justify-start"
+>
+  <div
+    #controlHeader
+    class="flex flex-row items-center justify-center px-4 py-2 bg-neutral-800 w-full flex-shrink-0"
+  >
+    <div
+      class="grid w-full gap-4 max-w-5xl"
+      [ngClass]="{ 'grid-cols-7': width >= 400, 'grid-cols-3': width < 400 }"
+    >
+      <app-input
+        label="X Size (mm)"
+        [(value)]="xDim"
+        (valueChange)="onInputChange()"
+      ></app-input>
+      <app-input
+        label="Y Size (mm)"
+        [(value)]="yDim"
+        (valueChange)="onInputChange()"
+      ></app-input>
+      <app-input
+        label="X Points"
+        [(value)]="xDiv"
+        (valueChange)="onInputChange()"
+      ></app-input>
+      <app-input
+        label="Y Points"
+        [(value)]="yDiv"
+        (valueChange)="onInputChange()"
+      ></app-input>
+      <app-input label="Z Stepdown (mm)" [(value)]="zStep"></app-input>
+      <app-input label="Z Travel Height (mm)" [(value)]="zTravel"></app-input>
+      <app-button
+        label="Start"
+        class="mt-5"
+        [disabled]="!canStart()"
+      ></app-button>
+    </div>
+  </div>
+  <div
+    #threeRenderer
+    class="h-full w-full flex-shrink overflow-hidden relative"
+  >
+    <x-button class="absolute top-8 right-8" (click)="resetView()"
+      ><x-icon href="#history-undo"></x-icon
+      ><x-label>Reset View</x-label></x-button
+    >
+  </div>
+</div>

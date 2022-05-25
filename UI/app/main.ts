@@ -2,6 +2,7 @@ import { app, BrowserWindow, screen, ipcMain, dialog } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
+import { SerialPort } from 'serialport';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
@@ -199,6 +200,93 @@ try {
       }
     }
   });
+
+  let cncPort: SerialPort | undefined;
+  let switchPort: SerialPort | undefined;
+
+  ipcMain.on('serial:list_ports', async () => {
+    const ports = await SerialPort.list();
+    console.log('P', ports);
+    if (win) {
+      win.webContents.send('serial:list_ports', ports);
+    }
+  });
+
+  ipcMain.on(
+    'serial:set_cnc_port',
+    async (event, path: string, baud: number) => {
+      try {
+        if (cncPort && cncPort.isOpen) {
+          await new Promise<void>((resolve, reject) => {
+            cncPort.close((err) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+          });
+        }
+        await new Promise<void>((resolve, reject) => {
+          cncPort = new SerialPort(
+            {
+              path,
+              baudRate: baud,
+            },
+            (err) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            }
+          );
+        });
+        win.webContents.send('serial:set_cnc_port');
+      } catch (e) {
+        win.webContents.send('serial:set_cnc_port', e.toString());
+      }
+    }
+  );
+
+  ipcMain.on(
+    'serial:set_switch_port',
+    async (event, path: string, baud: number) => {
+      try {
+        if (switchPort && switchPort.isOpen) {
+          await new Promise<void>((resolve, reject) => {
+            switchPort.close((err) => {
+              if (err) {
+                console.error(err);
+                reject(err);
+              } else {
+                resolve();
+              }
+            });
+          });
+        }
+        await new Promise<void>((resolve, reject) => {
+          switchPort = new SerialPort(
+            {
+              path,
+              baudRate: baud,
+            },
+            (err) => {
+              if (err) {
+                reject(err);
+              } else {
+                resolve();
+              }
+            }
+          );
+        });
+        win.webContents.send('serial:set_switch_port');
+      } catch (e) {
+        win.webContents.send('serial:set_switch_port', e.toString());
+      }
+    }
+  );
 } catch (e) {
   // Catch Error
   // throw e;

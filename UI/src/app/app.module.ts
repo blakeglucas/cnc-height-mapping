@@ -7,8 +7,14 @@ import { ResizableModule } from 'angular-resizable-element';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  MatSnackBarModule,
+  MAT_SNACK_BAR_DEFAULT_OPTIONS,
+} from '@angular/material/snack-bar';
 
 import { AppRoutingModule } from './app-routing.module';
+
+import { APP_CONFIG } from '../environments/environment';
 
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
@@ -27,6 +33,8 @@ import { MachineControlButtonComponent } from './components/machine-control-butt
 import { TabsViewComponent } from './components/tabs-view/tabs-view.component';
 import { GcodeRendererComponent } from './components/gcode-renderer/gcode-renderer.component';
 import { CurrentHeightMapComponent } from './views/current-height-map/current-height-map.component';
+import { MachineControlComponent } from './components/machine-control/machine-control.component';
+import { CalibrationComponent } from './views/calibration/calibration.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -47,6 +55,8 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     TabsViewComponent,
     GcodeRendererComponent,
     CurrentHeightMapComponent,
+    MachineControlComponent,
+    CalibrationComponent,
   ],
   imports: [
     BrowserModule,
@@ -66,8 +76,12 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     MatButtonModule,
     MatProgressSpinnerModule,
     PlotlyModule,
+    MatSnackBarModule,
   ],
-  providers: [],
+  providers: [
+    ...APP_CONFIG.providers,
+    { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: -1 } },
+  ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

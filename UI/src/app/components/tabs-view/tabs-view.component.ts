@@ -33,7 +33,7 @@ export class TabsViewComponent implements OnInit, AfterViewInit, OnChanges {
     private cdr: ChangeDetectorRef
   ) {}
 
-  currentTab = '';
+  currentTab = 'calibration';
 
   ngAfterViewInit(): void {}
 

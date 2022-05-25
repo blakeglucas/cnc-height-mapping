@@ -9,6 +9,7 @@ export class MachineControlButtonComponent implements OnInit {
   @Input() iconName = '';
   @Input() rotate = false;
   @Input() loading = false;
+  @Input() disabled = false;
 
   constructor() {}
 
