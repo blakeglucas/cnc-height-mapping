@@ -5,6 +5,7 @@ import {
   ISerialService,
   SERIAL_COMMAND,
 } from '../interfaces/SerialService.interface';
+import { SerialPort } from 'serialport';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,9 @@ export class SerialService implements ISerialService {
   readonly availablePorts$ = this._availablePorts.asObservable();
 
   constructor() {}
+
+  cncPort: SerialPort;
+  switchPort: SerialPort;
 
   set availablePorts(ports: PortInfo[]) {
     this._availablePorts.next(ports);

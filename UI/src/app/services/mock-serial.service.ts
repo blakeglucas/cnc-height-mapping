@@ -25,6 +25,9 @@ export class MockSerialService implements ISerialService {
   ]);
   readonly availablePorts$ = this._availablePorts.asObservable();
 
+  cncPort: SerialPort | undefined;
+  switchPort: SerialPort | undefined;
+
   private readonly ipcRenderer: typeof ipcRenderer;
 
   constructor(private n: NotificationService) {
