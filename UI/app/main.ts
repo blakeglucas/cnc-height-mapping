@@ -3,6 +3,13 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as url from 'url';
 import { SerialPort } from 'serialport';
+import { ReadlineParser } from 'serialport';
+import {
+  SERIAL_COMMAND_MAP,
+  UI_SERIAL_COMMAND,
+  UI_SERIAL_PARAMS,
+} from './marlin';
+import { writeSerial, readSerial } from './serial';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
@@ -284,6 +291,39 @@ try {
       } catch (e) {
         win.webContents.send('serial:set_switch_port', e.toString());
       }
+    }
+  );
+
+  ipcMain.on(
+    'serial:command',
+    async (event, cmd: UI_SERIAL_COMMAND, params: UI_SERIAL_PARAMS) => {
+      const c = SERIAL_COMMAND_MAP[cmd];
+      if (!c) {
+        throw new Error('Invalid serial command');
+      }
+      const cmds = Array.isArray(c) ? c : [c];
+      await Promise.all(
+        cmds.map(async (c) => {
+          if (!c.endsWith('\0')) {
+            // Params
+            const givenParams = Object.entries(params).filter((x) => !!x[1]);
+            const paramString = givenParams
+              .map(
+                (paramPair) =>
+                  `${paramPair[0].toUpperCase()}${paramPair[1].toFixed(8)}`
+              )
+              .join(' ');
+            const result = await writeSerial(cncPort, `${cmd} ${paramString}`);
+            console.log(result);
+          } else {
+            // no params
+            const result = await writeSerial(cncPort, c.replace(/\0/g, ''));
+            console.log(result);
+          }
+        })
+      );
+      const result = await readSerial(cncPort);
+      console.log(result);
     }
   );
 } catch (e) {

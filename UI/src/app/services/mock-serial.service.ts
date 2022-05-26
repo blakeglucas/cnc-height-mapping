@@ -3,7 +3,11 @@ import { Injectable } from '@angular/core';
 import { PortInfo } from '@serialport/bindings-interface';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { SerialPort } from 'serialport';
-import { ISerialService } from '../interfaces/SerialService.interface';
+import {
+  ISerialService,
+  SERIAL_COMMAND,
+  SERIAL_PARAMS,
+} from '../interfaces/SerialService.interface';
 import { ElectronService } from './electron.service';
 import { NotificationService } from './notification.service';
 
@@ -20,9 +24,6 @@ export class MockSerialService implements ISerialService {
     },
   ]);
   readonly availablePorts$ = this._availablePorts.asObservable();
-
-  cncPort: SerialPort | undefined;
-  switchPort: SerialPort | undefined;
 
   private readonly ipcRenderer: typeof ipcRenderer;
 
@@ -51,9 +52,12 @@ export class MockSerialService implements ISerialService {
     await new Promise<void>((resolve, reject) => {
       this.ipcRenderer.once(eventTag, (event, err) => {
         console.log(err);
+        this.n.showError(err);
         resolve();
       });
       this.ipcRenderer.send(eventTag, portPath, baud);
     });
   }
+
+  async sendCommand(cmd: SERIAL_COMMAND, params: SERIAL_PARAMS) {}
 }

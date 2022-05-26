@@ -62,6 +62,7 @@
     "@angular/platform-browser": "13.3.8",
     "@angular/platform-browser-dynamic": "13.3.8",
     "@angular/router": "13.3.8",
+    "@serialport/parser-readline": "^10.3.0",
     "angular-plotly.js": "^4.0.4",
     "angular-resizable-element": "^5.0.0",
     "colornames": "^1.1.1",
