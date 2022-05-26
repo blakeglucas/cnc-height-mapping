@@ -206,7 +206,6 @@ try {
 
   ipcMain.on('serial:list_ports', async () => {
     const ports = await SerialPort.list();
-    console.log('P', ports);
     if (win) {
       win.webContents.send('serial:list_ports', ports);
     }

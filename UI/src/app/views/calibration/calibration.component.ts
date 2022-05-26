@@ -68,7 +68,7 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
       10000
     );
 
-    this.camera.position.z = 25;
+    this.zoomToFit();
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(colornames('gray 22'));
 
@@ -164,21 +164,32 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
     const xOffset = this.xDim / -2;
     const yOffset = this.yDim / -2;
 
-    const xDelta = this.xDim / (this.xDiv - 1);
-    const yDelta = this.yDim / (this.yDiv - 1);
+    const xDelta = this.xDim / (this.xDiv - (this.xDiv < this.xDim ? 1 : 0));
+    const yDelta = this.yDim / (this.yDiv - (this.yDiv < this.yDim ? 1 : 0));
 
-    const material = new THREE.MeshBasicMaterial({ color: colornames('blue') });
+    const material = new THREE.MeshBasicMaterial({
+      color: colornames('gold 3'),
+    });
 
     for (let y = 0; y <= this.yDim; y += yDelta) {
       for (let x = 0; x <= this.xDim; x += xDelta) {
         const center = new THREE.Vector2(x + xOffset, y + yOffset);
-        const geometry = new THREE.CircleGeometry(0.5, 64);
+        const geometry = new THREE.SphereGeometry(0.5, 64);
         const circle = new THREE.Mesh(geometry, material);
         circle.position.set(x + xOffset, y + yOffset, 0);
         this.calPointsRef.add(circle);
       }
     }
     this.scene.add(this.calPointsRef);
+  }
+
+  private zoomToFit() {
+    const theta = this.camera.fov / 2;
+    const cHeight =
+      (this.yDim >= this.xDim ? this.yDim + 3 : this.xDim - 6) /
+      2 /
+      Math.tan(theta * ((2 * Math.PI) / 360));
+    this.camera.position.z = cHeight;
   }
 
   animate() {
@@ -206,7 +217,6 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     this.updateRendererWidth();
     this.cdr.detectChanges();
-    console.log(this.width);
   }
 
   getRenderHeight(): number {
@@ -225,7 +235,7 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
       0.01,
       10000
     );
-    this.camera.position.z = 25;
+    this.zoomToFit();
     this.renderer.render(this.scene, this.camera);
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.updateRendererWidth();
@@ -240,6 +250,7 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
     ) {
       this.drawGrid();
       this.drawCalibrationPoints();
+      this.zoomToFit();
     }
   }
 }

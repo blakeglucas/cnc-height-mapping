@@ -92,7 +92,6 @@ export class ControlPanelComponent implements OnInit {
   }
 
   connectSocket() {
-    console.log(this.piIPAddress, this.piPort);
     if (this.socketService.isConnected) {
       this.socketService.disconnectSocket();
     } else {
