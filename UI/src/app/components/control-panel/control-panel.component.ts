@@ -8,6 +8,7 @@ import {
 } from '@angular/core';
 import { ResizeEvent } from 'angular-resizable-element';
 import { map, Observable, of } from 'rxjs';
+import { SERIAL_COMMAND } from '../../interfaces/SerialService.interface';
 import { ElectronService } from '../../services/electron.service';
 import { SerialService } from '../../services/serial.service';
 import { SocketService } from '../../services/socket.service';
@@ -19,6 +20,7 @@ import { DropdownItem } from '../dropdown/dropdown.component';
   styleUrls: ['./control-panel.component.scss'],
 })
 export class ControlPanelComponent implements OnInit {
+  readonly SERIAL_COMMAND = SERIAL_COMMAND;
   private readonly minWidth = 200;
   readonly initialWidth = 450;
   _width = this.initialWidth;
@@ -163,6 +165,11 @@ export class ControlPanelComponent implements OnInit {
   }
 
   refreshSerialPorts() {
+    // TODO Refactor to SerialService via ipcRenderer directly
     this.electronService.getAvailableSerialPorts();
+  }
+
+  home() {
+    this.serialService.sendCommand(SERIAL_COMMAND.HOME);
   }
 }

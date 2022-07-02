@@ -105,16 +105,21 @@ export function contourGCode(
     ) {
       // Travel z setting, ignore
       return line;
-    } else if (
-      (line.cmd === 'G1' || line.cmd === 'G01') &&
-      line.x === null &&
-      line.y === null &&
-      line.z &&
-      line.z < 0
+    }
+    // else if (
+    //   (line.cmd === 'G1' || line.cmd === 'G01') &&
+    //   line.x === null &&
+    //   line.y === null &&
+    //   line.z &&
+    //   line.z < 0
+    // ) {
+    //   line.z = zdepth;
+    //   return line;
+    // }
+    else if (
+      ((line.cmd === 'G1' || line.cmd === 'G01') && line.x && line.y) ||
+      ((line.cmd === 'G0' || line.cmd === 'G00') && line.x && line.y && !line.z)
     ) {
-      line.z = zdepth;
-      return line;
-    } else if ((line.cmd === 'G1' || line.cmd === 'G01') && line.x && line.y) {
       const nearestNeighbors = pointTree.nearest([line.x, line.y, 0], 2);
       const [nn1, nn2] = nearestNeighbors.map((a) => a[0]);
       const [x1, y1, z1] = [nn1.x, nn1.y, nn1.z];
@@ -136,8 +141,14 @@ export function contourGCode(
         target_z += z_x_interp;
       }
       line.z = target_z;
+      if (line.cmd === 'G0' || line.cmd === 'G00') {
+        const prevLine = new GCodeLine(line.repr());
+        prevLine.z = undefined;
+        return [prevLine, line];
+      }
       return line;
     }
+    return null;
   });
-  return modifiedLines;
+  return modifiedLines.filter((a) => !!a).flat();
 }

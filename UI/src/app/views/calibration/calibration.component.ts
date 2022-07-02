@@ -17,6 +17,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { CoordinateAxes } from '../../utils/threejs/CoordinateAxes';
 import { GridLines } from '../../utils/threejs/GridLines';
 import { TextSprite } from '../../utils/threejs/TextSprite';
+import { CalibrationService } from '../../services/calibration.service';
 
 @Component({
   selector: 'app-calibration',
@@ -47,6 +48,7 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
 
   constructor(
     private serialService: SerialService,
+    private calibrationService: CalibrationService,
     private cdr: ChangeDetectorRef
   ) {
     this.initRender = this.initRender.bind(this);
@@ -58,6 +60,20 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
 
   canStart() {
     return !!(this.serialService.cncPort && this.serialService.switchPort);
+  }
+
+  async startCalibration() {
+    console.log(this.canStart());
+    if (this.canStart()) {
+      await this.calibrationService.start({
+        x: this.xDim,
+        y: this.yDim,
+        xn: this.xDiv,
+        yn: this.yDiv,
+        zstep: this.zStep,
+        ztrav: this.zTravel,
+      });
+    }
   }
 
   private initRender() {

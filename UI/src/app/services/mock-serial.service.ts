@@ -25,12 +25,18 @@ export class MockSerialService implements ISerialService {
   ]);
   readonly availablePorts$ = this._availablePorts.asObservable();
 
-  cncPort: SerialPort | undefined;
-  switchPort: SerialPort | undefined;
+  private readonly _activeCommand = new BehaviorSubject<
+    SERIAL_COMMAND | undefined
+  >(undefined);
+  readonly activeCommand$ = this._activeCommand.asObservable();
+
+  cncPort: string | undefined;
+  switchPort: string | undefined;
 
   private readonly ipcRenderer: typeof ipcRenderer;
 
   constructor(private n: NotificationService) {
+    console.debug('USING MOCK SERIAL SERVICE');
     this.ipcRenderer = window.require('electron').ipcRenderer;
   }
 
@@ -38,29 +44,16 @@ export class MockSerialService implements ISerialService {
     // this._availablePorts.next(ports)
   }
 
-  async setCNCPort(portPath: string, baud: number): Promise<void> {
-    const eventTag = 'serial:set_cnc_port';
-    await new Promise<void>((resolve, reject) => {
-      this.ipcRenderer.once(eventTag, (event, err) => {
-        console.log(err);
-        this.n.showError(err);
-        resolve();
-      });
-      this.ipcRenderer.send(eventTag, portPath, baud);
-    });
-  }
+  async setCNCPort(portPath: string, baud: number): Promise<void> {}
 
-  async setSwitchPort(portPath: string, baud: number): Promise<void> {
-    const eventTag = 'serial:set_switch_port';
-    await new Promise<void>((resolve, reject) => {
-      this.ipcRenderer.once(eventTag, (event, err) => {
-        console.log(err);
-        this.n.showError(err);
-        resolve();
-      });
-      this.ipcRenderer.send(eventTag, portPath, baud);
-    });
-  }
+  async setSwitchPort(portPath: string, baud: number): Promise<void> {}
 
-  async sendCommand(cmd: SERIAL_COMMAND, params: SERIAL_PARAMS) {}
+  async sendCommand(cmd: SERIAL_COMMAND, params?: SERIAL_PARAMS) {
+    console.log(cmd, params);
+    this._activeCommand.next(cmd);
+    await new Promise<void>((resolve) => {
+      setTimeout(resolve, Math.random() * 8000);
+    });
+    this._activeCommand.next(undefined);
+  }
 }

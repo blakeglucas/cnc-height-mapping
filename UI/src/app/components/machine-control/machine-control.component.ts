@@ -7,6 +7,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 })
 export class MachineControlComponent implements OnInit {
   @Input() disabled = false;
+  @Input() homing = false;
 
   @Output() up = new EventEmitter<void>();
   @Output() left = new EventEmitter<void>();

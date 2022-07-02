@@ -79,7 +79,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     MatSnackBarModule,
   ],
   providers: [
-    ...APP_CONFIG.providers,
+    ...((APP_CONFIG as any).providers || []),
     { provide: MAT_SNACK_BAR_DEFAULT_OPTIONS, useValue: { duration: -1 } },
   ],
   bootstrap: [AppComponent],

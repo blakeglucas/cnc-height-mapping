@@ -4,44 +4,78 @@ import { PortInfo } from '@serialport/bindings-interface';
 import {
   ISerialService,
   SERIAL_COMMAND,
+  SERIAL_PARAMS,
 } from '../interfaces/SerialService.interface';
 import { SerialPort } from 'serialport';
+import { ipcRenderer } from 'electron';
+import { NotificationService } from './notification.service';
+import { IPCRendererBase } from '../utils/IPCRendererBase';
 
 @Injectable({
   providedIn: 'root',
 })
-export class SerialService implements ISerialService {
+export class SerialService extends IPCRendererBase implements ISerialService {
   private readonly _availablePorts = new BehaviorSubject<PortInfo[]>([]);
   readonly availablePorts$ = this._availablePorts.asObservable();
 
-  constructor() {}
+  private readonly _activeCommand = new BehaviorSubject<
+    SERIAL_COMMAND | undefined
+  >(undefined);
+  readonly activeCommand$ = this._activeCommand.asObservable();
 
-  cncPort: SerialPort;
-  switchPort: SerialPort;
+  constructor(private n: NotificationService) {
+    super();
+  }
+
+  cncPort: string;
+  switchPort: string;
 
   set availablePorts(ports: PortInfo[]) {
     this._availablePorts.next(ports);
   }
 
-  setCNCPort(portPath: string, baud: number): Promise<void> {
-    throw new Error('Method not implemented.');
-  }
-  setSwitchPort(portPath: string, baud: number): Promise<void> {
-    throw new Error('Method not implemented.');
+  async setCNCPort(portPath: string, baud: number): Promise<void> {
+    const eventTag = 'serial:set_cnc_port';
+    await new Promise<void>((resolve, reject) => {
+      this.ipcRenderer.once(eventTag, (event, err) => {
+        if (err) {
+          console.log(err);
+          this.n.showError(err);
+          throw new Error(err);
+        }
+        resolve();
+      });
+      this.ipcRenderer.send(eventTag, portPath, baud);
+    });
+    this.cncPort = portPath;
   }
 
-  sendCommand(
-    cmd: SERIAL_COMMAND,
-    params: Partial<{
-      x: number;
-      y: number;
-      z: number;
-      f: number;
-      s: number;
-      e: never;
-      b: never;
-    }>
-  ): Promise<void> {
-    throw new Error('Method not implemented.');
+  async setSwitchPort(portPath: string, baud: number): Promise<void> {
+    const eventTag = 'serial:set_switch_port';
+    await new Promise<void>((resolve, reject) => {
+      this.ipcRenderer.once(eventTag, (event, err) => {
+        if (err) {
+          console.log(err);
+          this.n.showError(err);
+          throw new Error(err);
+        }
+        resolve();
+      });
+      this.ipcRenderer.send(eventTag, portPath, baud);
+    });
+    this.switchPort = portPath;
+  }
+
+  async sendCommand(cmd: SERIAL_COMMAND, params?: SERIAL_PARAMS): Promise<any> {
+    const eventTag = 'serial:command';
+    return await new Promise<any>((resolve, reject) => {
+      this.ipcRenderer.once(eventTag, (event, err, result) => {
+        if (err) {
+          console.log(err);
+        }
+        resolve(result);
+      });
+      this.ipcRenderer.send(eventTag, cmd, params);
+    });
   }
 }

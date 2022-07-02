@@ -167,7 +167,7 @@
         ></app-button>
       </div>
       <app-divider></app-divider>
-      <app-machine-control [disabled]="!cncPort"></app-machine-control>
+      <!-- <app-machine-control [disabled]="!cncPort" (home)="home()" [homing]="(serialService.activeCommand$ | async) === SERIAL_COMMAND.HOME"></app-machine-control> -->
     </ng-container>
   </div>
 </div>

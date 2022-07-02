@@ -25,12 +25,13 @@ export type SERIAL_PARAMS = Partial<{
 export interface ISerialService {
   availablePorts: PortInfo[];
   availablePorts$: Observable<(PortInfo | Partial<PortInfo>)[]>;
+  activeCommand$: Observable<SERIAL_COMMAND | undefined>;
 
-  cncPort: SerialPort | undefined;
-  switchPort: SerialPort | undefined;
+  cncPort: string | undefined;
+  switchPort: string | undefined;
 
   setCNCPort(portPath: string, baud: number): Promise<void>;
   setSwitchPort(portPath: string, baud: number): Promise<void>;
 
-  sendCommand(cmd: SERIAL_COMMAND, params: SERIAL_PARAMS): Promise<void>;
+  sendCommand(cmd: SERIAL_COMMAND, params?: SERIAL_PARAMS): Promise<void>;
 }

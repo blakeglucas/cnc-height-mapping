@@ -10,6 +10,7 @@ import {
   UI_SERIAL_PARAMS,
 } from './marlin';
 import { writeSerial, readSerial } from './serial';
+import { SwitchPort } from './SwitchPort';
 
 let win: BrowserWindow = null;
 const args = process.argv.slice(1),
@@ -209,7 +210,7 @@ try {
   });
 
   let cncPort: SerialPort | undefined;
-  let switchPort: SerialPort | undefined;
+  let switchPort: SwitchPort | undefined;
 
   ipcMain.on('serial:list_ports', async () => {
     const ports = await SerialPort.list();
@@ -260,33 +261,16 @@ try {
     'serial:set_switch_port',
     async (event, path: string, baud: number) => {
       try {
-        if (switchPort && switchPort.isOpen) {
-          await new Promise<void>((resolve, reject) => {
-            switchPort.close((err) => {
-              if (err) {
-                console.error(err);
-                reject(err);
-              } else {
-                resolve();
-              }
-            });
-          });
+        if (switchPort) {
+          await switchPort.close();
         }
-        await new Promise<void>((resolve, reject) => {
-          switchPort = new SerialPort(
-            {
-              path,
-              baudRate: baud,
-            },
-            (err) => {
-              if (err) {
-                reject(err);
-              } else {
-                resolve();
-              }
-            }
-          );
-        });
+        switchPort = new SwitchPort(
+          {
+            path,
+            baudRate: baud,
+          },
+          win.webContents.send.bind(win.webContents)
+        );
         win.webContents.send('serial:set_switch_port');
       } catch (e) {
         win.webContents.send('serial:set_switch_port', e.toString());
@@ -302,28 +286,31 @@ try {
         throw new Error('Invalid serial command');
       }
       const cmds = Array.isArray(c) ? c : [c];
+      console.log(params);
       await Promise.all(
         cmds.map(async (c) => {
           if (!c.endsWith('\0')) {
             // Params
-            const givenParams = Object.entries(params).filter((x) => !!x[1]);
+            const givenParams = Object.entries(params).filter(
+              (x) => x !== undefined && x !== null
+            );
             const paramString = givenParams
               .map(
                 (paramPair) =>
                   `${paramPair[0].toUpperCase()}${paramPair[1].toFixed(8)}`
               )
               .join(' ');
-            const result = await writeSerial(cncPort, `${cmd} ${paramString}`);
-            console.log(result);
+            const result = await writeSerial(cncPort, `${c} ${paramString}`);
+            // win.webContents.send('serial:command', undefined, result)
           } else {
             // no params
             const result = await writeSerial(cncPort, c.replace(/\0/g, ''));
-            console.log(result);
+            // win.webContents.send('serial:command', undefined, result)
           }
         })
       );
       const result = await readSerial(cncPort);
-      console.log(result);
+      win.webContents.send('serial:command', undefined, result);
     }
   );
 } catch (e) {

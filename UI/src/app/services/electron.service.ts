@@ -47,6 +47,7 @@ export class ElectronService {
         }
       );
 
+      // TODO Refactor to SerialService via ipcRenderer directly
       this.ipcRenderer.on('serial:list_ports', (event, ports: PortInfo[]) => {
         this.serialService.availablePorts = ports;
       });
@@ -71,6 +72,7 @@ export class ElectronService {
     return !!(window && window.process && window.process.type);
   }
 
+  // TODO Refactor to SerialService via ipcRenderer directly
   getAvailableSerialPorts() {
     this.ipcRenderer.send('serial:list_ports');
   }
