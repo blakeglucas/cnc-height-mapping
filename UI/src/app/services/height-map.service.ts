@@ -43,4 +43,9 @@ export class HeightMapService {
       return data as number[][];
     }
   }
+
+  loadHeightMapFromCalibration(calResult: number[][][]) {
+    const nData = this.normalize(calResult);
+    this._currentHeightMap.next(nData);
+  }
 }

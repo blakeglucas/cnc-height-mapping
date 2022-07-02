@@ -15,29 +15,49 @@
         label="X Size (mm)"
         [(value)]="xDim"
         (valueChange)="onInputChange()"
+        [disabled]="calibrationRunning"
       ></app-input>
       <app-input
         label="Y Size (mm)"
         [(value)]="yDim"
         (valueChange)="onInputChange()"
+        [disabled]="calibrationRunning"
       ></app-input>
       <app-input
         label="X Points"
         [(value)]="xDiv"
         (valueChange)="onInputChange()"
+        [disabled]="calibrationRunning"
       ></app-input>
       <app-input
         label="Y Points"
         [(value)]="yDiv"
         (valueChange)="onInputChange()"
+        [disabled]="calibrationRunning"
       ></app-input>
-      <app-input label="Z Stepdown (mm)" [(value)]="zStep"></app-input>
-      <app-input label="Z Travel Height (mm)" [(value)]="zTravel"></app-input>
+      <app-input
+        label="Z Stepdown (mm)"
+        [(value)]="zStep"
+        [disabled]="calibrationRunning"
+      ></app-input>
+      <app-input
+        label="Z Travel Height (mm)"
+        [(value)]="zTravel"
+        [disabled]="calibrationRunning"
+      ></app-input>
       <app-button
+        *ngIf="!calibrationRunning"
         label="Start"
         class="mt-5"
-        [disabled]="!canStart()"
+        [disabled]="!canStart() || calibrationRunning"
         (click)="startCalibration()"
+      ></app-button>
+      <app-button
+        *ngIf="calibrationRunning"
+        label="Stop"
+        class="mt-5"
+        [disabled]="!calibrationRunning"
+        (click)="stopCalibration()"
       ></app-button>
     </div>
   </div>

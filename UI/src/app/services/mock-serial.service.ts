@@ -49,7 +49,6 @@ export class MockSerialService implements ISerialService {
   async setSwitchPort(portPath: string, baud: number): Promise<void> {}
 
   async sendCommand(cmd: SERIAL_COMMAND, params?: SERIAL_PARAMS) {
-    console.log(cmd, params);
     this._activeCommand.next(cmd);
     await new Promise<void>((resolve) => {
       setTimeout(resolve, Math.random() * 8000);

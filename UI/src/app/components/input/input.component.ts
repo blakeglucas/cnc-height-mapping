@@ -8,6 +8,8 @@ import {
   Output,
   ViewChild,
   AfterViewInit,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 
@@ -16,7 +18,7 @@ import { ControlValueAccessor } from '@angular/forms';
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
 })
-export class InputComponent implements OnInit, AfterViewInit {
+export class InputComponent implements OnInit, AfterViewInit, OnChanges {
   @ViewChild('inputElem', { read: ElementRef })
   inputElem: ElementRef<HTMLInputElement>;
 
@@ -36,8 +38,11 @@ export class InputComponent implements OnInit, AfterViewInit {
     this.cdr.detectChanges();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    this.cdr.detectChanges();
+  }
+
   onChange(event: Event) {
-    console.log((event.target as HTMLInputElement).value);
     if (typeof this.value === 'number') {
       const nVal = Number((event.target as HTMLInputElement).value);
       this.valueChange.emit(nVal);

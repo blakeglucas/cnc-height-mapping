@@ -31,7 +31,6 @@ export class SwitchPort {
   }
 
   dataHandler(data: Buffer) {
-    console.log(data.toString());
     this.send(this.eventTag, data.toString());
   }
 

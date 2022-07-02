@@ -46,6 +46,11 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
   private gridRef: THREE.Group;
   private calPointsRef: THREE.Group;
 
+  calibrationRunning = false;
+  calibrationFinished = false;
+
+  calibrationPoints: number[][] = [];
+
   constructor(
     private serialService: SerialService,
     private calibrationService: CalibrationService,
@@ -54,6 +59,13 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
     this.initRender = this.initRender.bind(this);
     this.animate = this.animate.bind(this);
     this.initRender();
+    this.calibrationService.points$.subscribe({
+      next: (points) => {
+        this.calibrationPoints = points;
+        this.drawCalibrationPoints();
+        this.cdr.detectChanges();
+      },
+    });
   }
 
   ngOnInit(): void {}
@@ -63,9 +75,8 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   async startCalibration() {
-    console.log(this.canStart());
     if (this.canStart()) {
-      await this.calibrationService.start({
+      this.calibrationService.start({
         x: this.xDim,
         y: this.yDim,
         xn: this.xDiv,
@@ -73,6 +84,7 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
         zstep: this.zStep,
         ztrav: this.zTravel,
       });
+      this.calibrationRunning = true;
     }
   }
 
@@ -187,12 +199,25 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
       color: colornames('gold 3'),
     });
 
+    const calMaterial = new THREE.MeshBasicMaterial({
+      color: colornames('green'),
+    });
+
     for (let y = 0; y <= this.yDim; y += yDelta) {
       for (let x = 0; x <= this.xDim; x += xDelta) {
-        const center = new THREE.Vector2(x + xOffset, y + yOffset);
         const geometry = new THREE.SphereGeometry(0.5, 64);
-        const circle = new THREE.Mesh(geometry, material);
-        circle.position.set(x + xOffset, y + yOffset, 0);
+        const calPoint = this.calibrationPoints.find(
+          (p) => p[0] === x && p[1] === y
+        );
+        const circle = new THREE.Mesh(
+          geometry,
+          calPoint ? calMaterial : material
+        );
+        circle.position.set(
+          x + xOffset,
+          y + yOffset,
+          calPoint ? calPoint[2] : 0
+        );
         this.calPointsRef.add(circle);
       }
     }
@@ -267,6 +292,13 @@ export class CalibrationComponent implements OnInit, AfterViewInit, OnChanges {
       this.drawGrid();
       this.drawCalibrationPoints();
       this.zoomToFit();
+    }
+  }
+
+  stopCalibration() {
+    if (this.calibrationRunning) {
+      this.calibrationService.stop();
+      this.calibrationRunning = false;
     }
   }
 }

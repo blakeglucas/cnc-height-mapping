@@ -286,7 +286,6 @@ try {
         throw new Error('Invalid serial command');
       }
       const cmds = Array.isArray(c) ? c : [c];
-      console.log(params);
       await Promise.all(
         cmds.map(async (c) => {
           if (!c.endsWith('\0')) {

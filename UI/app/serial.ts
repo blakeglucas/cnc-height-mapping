@@ -24,7 +24,6 @@ export async function readSerial(port: SerialPort) {
   return await new Promise<any>((resolve, reject) => {
     const lineParser = new ReadlineParser({ delimiter: '\n' });
     lineParser.once('data', (line) => {
-      console.log(line);
       resolve(line);
     });
     lineParser.once('error', (err) => {

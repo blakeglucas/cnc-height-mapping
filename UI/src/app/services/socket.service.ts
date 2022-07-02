@@ -71,7 +71,6 @@ export class SocketService {
     this._currentSocket.on(
       EventTypes.GetMachinePosition,
       (isOk: string, pos: number[] | null) => {
-        console.log(isOk);
         if (pos) {
           this._machinePosition.next(pos);
         }
@@ -121,7 +120,6 @@ export class SocketService {
   }
 
   setActivePort(port: string, baud: number | undefined) {
-    console.log(port);
     if (this._currentSocket && port) {
       this._currentSocket.emit(EventTypes.SetActivePort, { port, baud });
     }
