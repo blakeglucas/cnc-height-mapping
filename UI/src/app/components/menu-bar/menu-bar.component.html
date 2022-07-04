@@ -1,64 +1,103 @@
-<header class="fixed top-0 left-0 right-0 h-8 bg-neutral-900 flex flex-row items-center justify-between overflow-visible z-50">
-    <div>
-        <x-menubar>
-            <x-menuitem>
-                <x-label>File</x-label>
-                <x-menu>
-                    <x-menuitem>
-                        <x-label>Open Project</x-label>
-                        <x-shortcut value="Control+O P"></x-shortcut>
-                    </x-menuitem>
-                    <hr>
-                    <x-menuitem (click)="openHeightMap()">
-                        <x-label>Load Height Map File</x-label>
-                        <x-shortcut value="Control+O H"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem (click)="openRawGCode()">
-                        <x-label>Load Raw G-Code File</x-label>
-                        <x-shortcut value="Control+O G"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem (click)="openCGCode()">
-                        <x-label>Load Contoured G-Code File</x-label>
-                        <x-shortcut value="Control+O C"></x-shortcut>
-                    </x-menuitem>
-                    <hr>
-                    <x-menuitem (click)="saveCGCode()">
-                        <x-label>Export Contoured G-Code</x-label>
-                        <x-shortcut value="Control+E"></x-shortcut>
-                    </x-menuitem>
-                    <hr>
-                    <x-menuitem>
-                        <x-label>Save Project</x-label>
-                        <x-shortcut value="Control+S"></x-shortcut>
-                    </x-menuitem>
-                    <x-menuitem>
-                        <x-label>Save Project As...</x-label>
-                        <x-shortcut value="Control+Shift+S"></x-shortcut>
-                    </x-menuitem>
-                    <hr>
-                    <x-menuitem (click)="close()">
-                        <x-label>Exit</x-label>
-                        <x-shortcut value="Control+Q"></x-shortcut>
-                    </x-menuitem>
-                </x-menu>
-            </x-menuitem>
-            <x-menuitem>
-                <x-label>Help</x-label>
-                <x-menu>
-                    <x-menuitem>
-                        <x-label>About</x-label>
-                        <!-- <x-shortcut value="Control+O H"></x-shortcut> -->
-                    </x-menuitem>
-                </x-menu>
-            </x-menuitem>
-        </x-menubar>
+<header
+  class="fixed top-0 left-0 right-0 h-8 bg-neutral-900 flex flex-row items-center justify-between overflow-visible z-50"
+>
+  <div>
+    <x-menubar>
+      <x-menuitem>
+        <x-label>File</x-label>
+        <x-menu>
+          <x-menuitem>
+            <x-label>Open Project</x-label>
+            <x-shortcut value="Control+O"></x-shortcut>
+          </x-menuitem>
+          <hr />
+          <x-menuitem (click)="openHeightMap()">
+            <x-label>Load Height Map File</x-label>
+            <x-shortcut value="Control+O H"></x-shortcut>
+          </x-menuitem>
+          <x-menuitem (click)="openRawGCode()">
+            <x-label>Load Raw G-Code File</x-label>
+            <x-shortcut value="Control+O G"></x-shortcut>
+          </x-menuitem>
+          <x-menuitem (click)="openCGCode()">
+            <x-label>Load Contoured G-Code File</x-label>
+            <x-shortcut value="Control+O C"></x-shortcut>
+          </x-menuitem>
+          <hr />
+          <x-menuitem (click)="saveHeightMap()">
+            <x-label>Export Current Height Map</x-label>
+            <x-shortcut value="Control+E H"></x-shortcut>
+          </x-menuitem>
+          <x-menuitem (click)="saveCGCode()">
+            <x-label>Export Contoured G-Code</x-label>
+            <x-shortcut value="Control+E G"></x-shortcut>
+          </x-menuitem>
+          <hr />
+          <x-menuitem>
+            <x-label>Save Project</x-label>
+            <x-shortcut value="Control+S"></x-shortcut>
+          </x-menuitem>
+          <x-menuitem>
+            <x-label>Save Project As...</x-label>
+            <x-shortcut value="Control+Shift+S"></x-shortcut>
+          </x-menuitem>
+          <hr />
+          <x-menuitem (click)="close()">
+            <x-label>Exit</x-label>
+            <x-shortcut value="Control+Q"></x-shortcut>
+          </x-menuitem>
+        </x-menu>
+      </x-menuitem>
+      <x-menuitem>
+        <x-label>Help</x-label>
+        <x-menu>
+          <x-menuitem>
+            <x-label>About</x-label>
+            <!-- <x-shortcut value="Control+O H"></x-shortcut> -->
+          </x-menuitem>
+        </x-menu>
+      </x-menuitem>
+    </x-menubar>
+  </div>
+  <div
+    class="flex h-full w-auto flex-grow flex-shrink-0 items-center justify-center"
+    style="-webkit-app-region: drag"
+  >
+    <div class="text-white select-none text-center text-sm w-full">
+      CNC Auto-Leveling Tool
     </div>
-    <div class="flex h-full w-auto flex-grow flex-shrink-0 items-center justify-center" style="-webkit-app-region: drag;">
-        <div class="text-white select-none text-center text-sm w-full">CNC Auto-Leveling Tool</div>
-    </div>
-    <div class="flex flex-row items-center justify-end">
-        <button mat-icon-button disableRipple style="width: 28px" (click)="minimize()"><mat-icon inline class="text-white hover:text-neutral-300 transition-colors">minimize</mat-icon></button>
-        <button mat-icon-button disableRipple style="width: 28px" (click)="maximize()"><mat-icon inline class="text-white hover:text-neutral-300 transition-colors">{{isMaximized ? 'close_fullscreen' : 'open_in_full'}}</mat-icon></button>
-        <button mat-icon-button disableRipple style="width: 28px" (click)="close()"><mat-icon inline class="text-white hover:text-neutral-300 transition-colors">close</mat-icon></button>
-    </div>
+  </div>
+  <div class="flex flex-row items-center justify-end">
+    <button
+      mat-icon-button
+      disableRipple
+      style="width: 28px"
+      (click)="minimize()"
+    >
+      <mat-icon
+        inline
+        class="text-white hover:text-neutral-300 transition-colors"
+        >minimize</mat-icon
+      >
+    </button>
+    <button
+      mat-icon-button
+      disableRipple
+      style="width: 28px"
+      (click)="maximize()"
+    >
+      <mat-icon
+        inline
+        class="text-white hover:text-neutral-300 transition-colors"
+        >{{ isMaximized ? "close_fullscreen" : "open_in_full" }}</mat-icon
+      >
+    </button>
+    <button mat-icon-button disableRipple style="width: 28px" (click)="close()">
+      <mat-icon
+        inline
+        class="text-white hover:text-neutral-300 transition-colors"
+        >close</mat-icon
+      >
+    </button>
+  </div>
 </header>

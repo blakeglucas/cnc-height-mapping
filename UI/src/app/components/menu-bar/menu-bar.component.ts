@@ -7,6 +7,7 @@ import {
 import * as Mousetrap from 'mousetrap';
 import { ElectronService } from '../../services/electron.service';
 import { GcodeService } from '../../services/gcode.service';
+import { HeightMapService } from '../../services/height-map.service';
 
 @Component({
   selector: 'app-menu-bar',
@@ -19,6 +20,7 @@ export class MenuBarComponent implements OnInit {
   constructor(
     private electronService: ElectronService,
     private gCodeService: GcodeService,
+    private heightMapService: HeightMapService,
     private cdr: ChangeDetectorRef
   ) {
     this.electronService.ipcRenderer.on(
@@ -48,7 +50,11 @@ export class MenuBarComponent implements OnInit {
       this.openCGCode();
       return false;
     });
-    Mousetrap.bind(['ctrl+e', 'cmd+e'], () => {
+    Mousetrap.bind(['ctrl+e h', 'cmd+e h'], () => {
+      this.saveHeightMap();
+      return false;
+    });
+    Mousetrap.bind(['ctrl+e g', 'cmd+e g'], () => {
       this.saveCGCode();
       return false;
     });
@@ -93,6 +99,13 @@ export class MenuBarComponent implements OnInit {
 
   openCGCode() {
     this.electronService.ipcRenderer.send('file:open_contoured_gcode');
+  }
+
+  saveHeightMap() {
+    this.electronService.ipcRenderer.send(
+      'file:save_height_map',
+      JSON.stringify(this.heightMapService.currentHeightMap)
+    );
   }
 
   saveCGCode() {

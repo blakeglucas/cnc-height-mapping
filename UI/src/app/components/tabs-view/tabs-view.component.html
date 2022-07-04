@@ -57,6 +57,7 @@
     [width]="contentWidth"
     [height]="contentHeight"
     [gCode]="gCodeService.rawGCode$ | async"
+    (contoured)="setTab('contouredGCode')"
   ></app-gcode-renderer>
   <app-gcode-renderer
     [ngClass]="{ hidden: currentTab !== 'contouredGCode' }"

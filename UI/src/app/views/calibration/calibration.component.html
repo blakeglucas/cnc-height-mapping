@@ -14,25 +14,21 @@
       <app-input
         label="X Size (mm)"
         [(value)]="xDim"
-        (valueChange)="onInputChange()"
         [disabled]="calibrationRunning"
       ></app-input>
       <app-input
         label="Y Size (mm)"
         [(value)]="yDim"
-        (valueChange)="onInputChange()"
         [disabled]="calibrationRunning"
       ></app-input>
       <app-input
         label="X Points"
         [(value)]="xDiv"
-        (valueChange)="onInputChange()"
         [disabled]="calibrationRunning"
       ></app-input>
       <app-input
         label="Y Points"
         [(value)]="yDiv"
-        (valueChange)="onInputChange()"
         [disabled]="calibrationRunning"
       ></app-input>
       <app-input
@@ -61,13 +57,35 @@
       ></app-button>
     </div>
   </div>
-  <div
-    #threeRenderer
-    class="h-full w-full flex-shrink overflow-hidden relative"
-  >
-    <x-button class="absolute top-8 right-8" (click)="resetView()"
-      ><x-icon href="#history-undo"></x-icon
-      ><x-label>Reset View</x-label></x-button
-    >
-  </div>
+  <app-calibration-grid
+    [controlHeader]="controlHeader"
+    [xDim]="xDim"
+    [yDim]="yDim"
+    [xDiv]="xDiv"
+    [yDiv]="yDiv"
+    [width]="width"
+    [height]="height"
+    [resultPoints]="calibrationPoints"
+  ></app-calibration-grid>
 </div>
+<dialog hidden #confirmDialog class="mt-8">
+  <main>
+    <h1 class="text-lg font-bold">Warning</h1>
+    <p>
+      There are active calibration results loaded. Proceeding with a new
+      calibration will clear them. Continue?
+    </p>
+  </main>
+  <footer>
+    <app-button
+      label="Cancel"
+      class="mr-4"
+      (click)="cancelConfirm()"
+    ></app-button>
+    <app-button
+      label="Continue"
+      class="mr-4"
+      (click)="didConfirm()"
+    ></app-button>
+  </footer>
+</dialog>

@@ -8,6 +8,8 @@ import {
   OnChanges,
   SimpleChanges,
   ChangeDetectorRef,
+  Output,
+  EventEmitter,
 } from '@angular/core';
 
 import { CoordinateAxes } from '../../utils/threejs/CoordinateAxes';
@@ -36,6 +38,7 @@ export class GcodeRendererComponent
   @Input() width = 600;
   @Input() height = 480;
   @Input() gCodeType: 'raw' | 'contoured' = 'raw';
+  @Output() contoured = new EventEmitter();
   @ViewChild('renderContainer', { read: ElementRef })
   renderContainer: ElementRef<HTMLDivElement>;
 
@@ -222,5 +225,6 @@ export class GcodeRendererComponent
     ).filter((a) => !!a);
     const cGCode = gCodeLines.map((line) => line.repr()).join('\n');
     this.gCodeService.setCGCode(cGCode);
+    this.contoured.emit();
   }
 }

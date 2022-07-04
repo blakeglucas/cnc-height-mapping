@@ -62,4 +62,8 @@ export class TabsViewComponent implements OnInit, AfterViewInit, OnChanges {
     const event = a as CustomEvent;
     this.currentTab = event.detail.value;
   }
+
+  setTab(name: string) {
+    this.currentTab = name;
+  }
 }

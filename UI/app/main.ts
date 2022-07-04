@@ -131,6 +131,7 @@ try {
   ipcMain.on('file:open_height_map', async () => {
     if (win) {
       const result = await dialog.showOpenDialog(win, {
+        title: 'Open Height Map',
         properties: ['openFile'],
         filters: [
           { name: 'Height Map Files', extensions: ['json', 'map', 'hmap'] },
@@ -147,6 +148,7 @@ try {
   ipcMain.on('file:open_raw_gcode', async () => {
     if (win) {
       const result = await dialog.showOpenDialog(win, {
+        title: 'Open Raw G-Code',
         properties: ['openFile'],
         filters: [
           { name: 'G-Code Files', extensions: ['gcode', 'cnc', 'nc'] },
@@ -163,6 +165,7 @@ try {
   ipcMain.on('file:open_contoured_gcode', async () => {
     if (win) {
       const result = await dialog.showOpenDialog(win, {
+        title: 'Open Contoured G-Code',
         properties: ['openFile'],
         filters: [
           {
@@ -179,9 +182,26 @@ try {
     }
   });
 
+  ipcMain.on('file:save_height_map', async (event, mapString) => {
+    if (win) {
+      const result = await dialog.showSaveDialog(win, {
+        title: 'Save Current Height Map',
+        filters: [
+          { name: 'Height Map Files', extensions: ['json', 'map', 'hmap'] },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+      if (!result.canceled) {
+        const fpath = result.filePath;
+        await fs.promises.writeFile(fpath, mapString);
+      }
+    }
+  });
+
   ipcMain.on('file:save_cgcode', async (event, gcode) => {
     if (win) {
       const result = await dialog.showSaveDialog(win, {
+        title: 'Save Contoured G-Code',
         filters: [
           { name: 'Contoured G-Code File', extensions: ['cgcode'] },
           {

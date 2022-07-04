@@ -47,6 +47,8 @@ export class CurrentHeightMapComponent implements OnInit, OnChanges, OnDestroy {
 
   private readonly baseLayout = {};
 
+  currentView: 'points' | 'surface' = 'points';
+
   layout: Partial<Plotly.Layout> = {
     ...this.baseLayout,
     paper_bgcolor: colorNames('gray 22'),
@@ -127,5 +129,9 @@ export class CurrentHeightMapComponent implements OnInit, OnChanges, OnDestroy {
     if (this.currentHeightMapSubscription) {
       this.currentHeightMapSubscription.unsubscribe();
     }
+  }
+
+  changeView() {
+    this.currentView = this.currentView === 'points' ? 'surface' : 'points';
   }
 }

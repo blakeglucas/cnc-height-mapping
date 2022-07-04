@@ -45,9 +45,17 @@ export class CoordinateAxes {
   // Creates an axisHelper with lines of length size.
   // @param {number} size Define the size of the line representing the axes.
   // @see [Drawing the Coordinate Control]{@http://soledadpenades.com/articles/three-js-tutorials/drawing-the-coordinate-axes/}
-  constructor(minX, maxX, minY, maxY) {
+  constructor(
+    minX: number,
+    maxX: number,
+    minY: number,
+    maxY: number,
+    minZ?: number,
+    maxZ?: number
+  ) {
     const red = colornames('red');
     const green = colornames('green');
+    const blue = colornames('blue');
 
     this.group.add(
       buildAxis(
@@ -75,5 +83,26 @@ export class CoordinateAxes {
         true
       ) // -Y
     );
+
+    if (minZ) {
+      this.group.add(
+        buildAxis(
+          new THREE.Vector3(0, 0, minZ),
+          new THREE.Vector3(0, 0, 0),
+          blue,
+          false
+        )
+      );
+    }
+    if (maxZ) {
+      this.group.add(
+        buildAxis(
+          new THREE.Vector3(0, 0, 0),
+          new THREE.Vector3(0, 0, maxZ),
+          blue,
+          false
+        )
+      );
+    }
   }
 }

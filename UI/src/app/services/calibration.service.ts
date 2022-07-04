@@ -20,6 +20,7 @@ type CalibrationParams = {
   yn: number;
   zstep: number;
   ztrav: number;
+  onComplete: () => void;
 };
 
 @Injectable({
@@ -57,12 +58,16 @@ export class CalibrationService extends IPCRendererBase {
     this.abortController = new AbortController();
   }
 
+  get points() {
+    return this._points.getValue();
+  }
+
   async start(params: CalibrationParams) {
     this.calParams = {
       ...params,
     };
-    this.dX = this.calParams.x / this.calParams.xn + 1;
-    this.dY = this.calParams.y / this.calParams.yn + 1;
+    this.dX = this.calParams.x / (this.calParams.xn - 1);
+    this.dY = this.calParams.y / (this.calParams.yn - 1);
     await this.serialService.sendCommand(SERIAL_COMMAND.GO_TO_ORIGIN);
     await this.serialService.sendCommand(SERIAL_COMMAND.MOVE_REL, {
       z: this.calParams.ztrav,
@@ -151,6 +156,7 @@ export class CalibrationService extends IPCRendererBase {
       }
     }
     this.heightMapService.loadHeightMapFromCalibration(this.heightMap);
+    this.calParams.onComplete();
   }
 
   appendToPoints(point: number[]) {
@@ -160,5 +166,9 @@ export class CalibrationService extends IPCRendererBase {
   stop() {
     this.abortController.abort();
     this.abortController = new AbortController();
+  }
+
+  clear() {
+    this._points.next([]);
   }
 }

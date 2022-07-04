@@ -35,6 +35,7 @@ import { GcodeRendererComponent } from './components/gcode-renderer/gcode-render
 import { CurrentHeightMapComponent } from './views/current-height-map/current-height-map.component';
 import { MachineControlComponent } from './components/machine-control/machine-control.component';
 import { CalibrationComponent } from './views/calibration/calibration.component';
+import { CalibrationGridComponent } from './components/calibration-grid/calibration-grid.component';
 
 PlotlyModule.plotlyjs = PlotlyJS;
 
@@ -57,6 +58,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     CurrentHeightMapComponent,
     MachineControlComponent,
     CalibrationComponent,
+    CalibrationGridComponent,
   ],
   imports: [
     BrowserModule,
