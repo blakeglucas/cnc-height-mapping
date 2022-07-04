@@ -1,19 +1,40 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { ElectronService } from './electron.service';
+import { SerialService } from './serial.service';
 
 export type HeightMap = number[][];
+
+export type HeightMapMetadata = {
+  x: number;
+  y: number;
+  xpoints: number;
+  ypoints: number;
+  timestamp: string;
+  switchPort?: string;
+  cncPort?: string;
+};
+
+export type HeightMapFileSchema = {
+  metadata: HeightMapMetadata;
+  map: HeightMap;
+};
 
 @Injectable({
   providedIn: 'root',
 })
 export class HeightMapService {
+  private readonly _currentMetadata = new BehaviorSubject<
+    HeightMapMetadata | undefined
+  >(undefined);
+  readonly currentMetadata$ = this._currentMetadata.asObservable();
+
   private readonly _currentHeightMap = new BehaviorSubject<
     HeightMap | undefined
   >(undefined);
   readonly currentHeightMap$ = this._currentHeightMap.asObservable();
 
-  constructor() {
+  constructor(private serialService: SerialService) {
     this.processHeightMapFile = this.processHeightMapFile.bind(this);
   }
 
@@ -21,11 +42,16 @@ export class HeightMapService {
     return this._currentHeightMap.getValue();
   }
 
+  get currentMetadata() {
+    return this._currentMetadata.getValue();
+  }
+
   processHeightMapFile(contents: string) {
     try {
-      const data = JSON.parse(contents);
-      const nData = this.normalize(data);
+      const data: HeightMapFileSchema = JSON.parse(contents);
+      const nData = this.normalize(data.map);
       this._currentHeightMap.next(nData);
+      this._currentMetadata.next(data.metadata);
     } catch (e) {
       console.error(e);
       // TODO notifications
@@ -44,8 +70,24 @@ export class HeightMapService {
     }
   }
 
-  loadHeightMapFromCalibration(calResult: number[][][]) {
+  loadHeightMapFromCalibration(
+    calResult: number[][][],
+    metadata: HeightMapMetadata
+  ) {
     const nData = this.normalize(calResult);
     this._currentHeightMap.next(nData);
+    this._currentMetadata.next(metadata);
+  }
+
+  createHeightMapFileContent() {
+    const data: HeightMapFileSchema = {
+      metadata: {
+        ...this.currentMetadata,
+        cncPort: this.serialService.cncPort,
+        switchPort: this.serialService.switchPort,
+      },
+      map: this.currentHeightMap,
+    };
+    return data;
   }
 }

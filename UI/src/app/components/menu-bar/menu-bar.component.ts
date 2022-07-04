@@ -104,7 +104,7 @@ export class MenuBarComponent implements OnInit {
   saveHeightMap() {
     this.electronService.ipcRenderer.send(
       'file:save_height_map',
-      JSON.stringify(this.heightMapService.currentHeightMap)
+      JSON.stringify(this.heightMapService.createHeightMapFileContent())
     );
   }
 

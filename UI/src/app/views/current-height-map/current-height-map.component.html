@@ -8,7 +8,9 @@
   [width]="width"
   [height]="height"
   [resultPoints]="heightMapService.currentHeightMap$ | async"
+  [resultMetadata]="heightMapService.currentMetadata$ | async"
   [additionalControls]="additionalControls"
+  [viewType]="currentView"
 ></app-calibration-grid>
 <ng-template #additionalControls>
   <div class="absolute top-8 right-8">

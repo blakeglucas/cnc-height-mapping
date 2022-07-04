@@ -155,7 +155,13 @@ export class CalibrationService extends IPCRendererBase {
         });
       }
     }
-    this.heightMapService.loadHeightMapFromCalibration(this.heightMap);
+    this.heightMapService.loadHeightMapFromCalibration(this.heightMap, {
+      x: this.calParams.x,
+      y: this.calParams.y,
+      xpoints: this.calParams.xn,
+      ypoints: this.calParams.yn,
+      timestamp: new Date().toUTCString(),
+    });
     this.calParams.onComplete();
   }
 
