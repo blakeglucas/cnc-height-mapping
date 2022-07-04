@@ -10,6 +10,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { APP_CONFIG } from '../environments/environment';
 
 import { SocketService } from './services/socket.service';
+import { ErrorService } from './services/error.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,8 @@ export class AppComponent implements AfterViewInit {
   constructor(
     private electronService: ElectronService,
     private translate: TranslateService,
-    public socketService: SocketService
+    public socketService: SocketService,
+    private errorService: ErrorService
   ) {
     this.translate.setDefaultLang('en');
     console.log('APP_CONFIG', APP_CONFIG);

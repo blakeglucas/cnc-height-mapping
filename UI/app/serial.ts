@@ -23,6 +23,7 @@ export async function writeSerial(port: SerialPort, x: any) {
 export async function readSerial(port: SerialPort) {
   return await new Promise<any>((resolve, reject) => {
     const lineParser = new ReadlineParser({ delimiter: '\n' });
+    lineParser.setMaxListeners(0);
     lineParser.once('data', (line) => {
       resolve(line);
     });

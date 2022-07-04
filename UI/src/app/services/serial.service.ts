@@ -41,7 +41,8 @@ export class SerialService extends IPCRendererBase implements ISerialService {
         if (err) {
           console.log(err);
           this.n.showError(err);
-          throw new Error(err);
+          this.cncPort = undefined;
+          reject(err);
         }
         resolve();
       });
@@ -57,7 +58,8 @@ export class SerialService extends IPCRendererBase implements ISerialService {
         if (err) {
           console.log(err);
           this.n.showError(err);
-          throw new Error(err);
+          this.switchPort = undefined;
+          reject(err);
         }
         resolve();
       });
@@ -72,6 +74,8 @@ export class SerialService extends IPCRendererBase implements ISerialService {
       this.ipcRenderer.once(eventTag, (event, err, result) => {
         if (err) {
           console.log(err);
+          this.n.showError(err);
+          throw new Error(err);
         }
         resolve(result);
       });

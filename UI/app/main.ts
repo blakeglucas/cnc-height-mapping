@@ -71,6 +71,19 @@ function createWindow(): BrowserWindow {
   return win;
 }
 
+function errorHandler(err: Error) {
+  if (win) {
+    win.webContents.send('error:process', err);
+  } else {
+    throw err;
+  }
+}
+
+ipcMain.setMaxListeners(0);
+process.setMaxListeners(0);
+process.on('uncaughtException', errorHandler);
+process.on('unhandledRejection', errorHandler);
+
 try {
   // This method will be called when Electron has finished
   // initialization and is ready to create browser windows.
@@ -270,6 +283,7 @@ try {
             }
           );
         });
+        cncPort.setMaxListeners(0);
         win.webContents.send('serial:set_cnc_port');
       } catch (e) {
         win.webContents.send('serial:set_cnc_port', e.toString());

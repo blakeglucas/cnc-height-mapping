@@ -19,9 +19,6 @@ import { APP_CONFIG } from '../environments/environment';
 // NG Translate
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import * as PlotlyJS from 'plotly.js-dist-min';
-import { PlotlyModule } from 'angular-plotly.js';
-
 import { AppComponent } from './app.component';
 import { ControlPanelComponent } from './components/control-panel/control-panel.component';
 import { DropdownComponent } from './components/dropdown/dropdown.component';
@@ -36,8 +33,6 @@ import { CurrentHeightMapComponent } from './views/current-height-map/current-he
 import { MachineControlComponent } from './components/machine-control/machine-control.component';
 import { CalibrationComponent } from './views/calibration/calibration.component';
 import { CalibrationGridComponent } from './components/calibration-grid/calibration-grid.component';
-
-PlotlyModule.plotlyjs = PlotlyJS;
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -77,7 +72,6 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    PlotlyModule,
     MatSnackBarModule,
   ],
   providers: [

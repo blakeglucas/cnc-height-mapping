@@ -3,6 +3,7 @@ import {
   Component,
   EventEmitter,
   HostListener,
+  OnDestroy,
   OnInit,
   Output,
 } from '@angular/core';
@@ -151,12 +152,30 @@ export class ControlPanelComponent implements OnInit {
     this.createSwitchSerial();
   }
 
+  async setCncPort(portPath: string) {
+    this._cncPort = portPath;
+    await this.createCNCSerial();
+  }
+
   async createCNCSerial() {
-    await this.serialService.setCNCPort(this._cncPort, this._cncBaud);
+    try {
+      await this.serialService.setCNCPort(this._cncPort, this._cncBaud);
+    } catch (e) {
+      this._cncPort = '';
+      this.cdr.detectChanges();
+    }
   }
 
   async createSwitchSerial() {
-    await this.serialService.setSwitchPort(this._switchPort, this._switchBaud);
+    try {
+      await this.serialService.setSwitchPort(
+        this._switchPort,
+        this._switchBaud
+      );
+    } catch (e) {
+      this._switchPort = '';
+      this.cdr.detectChanges();
+    }
   }
 
   onConnectionChange() {

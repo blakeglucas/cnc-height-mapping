@@ -111,7 +111,6 @@ export class CalibrationGridComponent
       this.xDiv = this.xDiv || this.resultMetadata.xpoints;
       this.yDiv = this.yDiv || this.resultMetadata.ypoints;
 
-      console.log(this.xDim, this.yDim, this.xDiv, this.yDiv);
       this.drawData();
     }
     this.updateRendererWidth();
@@ -128,7 +127,6 @@ export class CalibrationGridComponent
 
     this.zoomToFit();
     this.scene = new THREE.Scene();
-    console.log('scene defined');
     this.scene.background = new THREE.Color(colornames('gray 22'));
 
     this.drawGrid();
@@ -281,7 +279,6 @@ export class CalibrationGridComponent
     this.calPointsRef = new THREE.Group();
 
     const resultPoints = this.resultPoints || [];
-    console.log(resultPoints);
 
     const xOffset = this.xDim / -2;
     const yOffset = this.yDim / -2;
@@ -379,7 +376,6 @@ export class CalibrationGridComponent
         const br = resultPoints[x + y * this.xDiv + 1];
         const tl = resultPoints[x + y * this.xDiv + this.xDiv];
         const tr = resultPoints[x + y * this.xDiv + this.xDiv + 1];
-        console.log(bl, br, tl, tr);
         geometry.setFromPoints([
           new THREE.Vector3(bl[0], bl[1], bl[2] * 10),
           new THREE.Vector3(br[0], br[1], br[2] * 10),

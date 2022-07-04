@@ -9,6 +9,7 @@ export enum SERIAL_COMMAND {
   MOVE_ABS,
   MOVE_REL,
   GO_TO_ORIGIN,
+  GO_TO_ORIGIN_Z,
   GET_POSITION,
 }
 

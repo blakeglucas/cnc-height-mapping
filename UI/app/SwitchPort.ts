@@ -16,6 +16,7 @@ export class SwitchPort {
         throw err;
       }
     });
+    this.serialPort.setMaxListeners(0);
     this.errorHandler = this.errorHandler.bind(this);
     this.dataHandler = this.dataHandler.bind(this);
     this.serialPort.on('error', this.errorHandler);

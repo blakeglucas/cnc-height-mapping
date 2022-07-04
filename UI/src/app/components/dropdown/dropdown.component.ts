@@ -1,4 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 export interface DropdownItem {
   label: string;
@@ -11,16 +20,24 @@ export interface DropdownItem {
   templateUrl: './dropdown.component.html',
   styleUrls: ['./dropdown.component.scss'],
 })
-export class DropdownComponent implements OnInit {
+export class DropdownComponent implements OnInit, OnChanges {
   @Input() label: string | undefined;
   @Input() items: DropdownItem[] = [];
+  @Input() value: string = '';
   @Output() selectionchange = new EventEmitter<any>();
 
   currentSelection = '';
 
-  constructor() {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.value) {
+      this.currentSelection = changes.value.currentValue;
+      this.cdr.detectChanges();
+    }
+  }
 
   onChange(_event: Event) {
     const event = _event as CustomEvent;

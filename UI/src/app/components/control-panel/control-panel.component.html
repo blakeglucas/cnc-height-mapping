@@ -139,7 +139,8 @@
           label="CNC Machine Port"
           class="col-span-{{ width >= 400 ? '2' : '4' }}"
           [items]="localSerialDropdownOptions | async"
-          (selectionchange)="cncPort = $event"
+          [value]="cncPort"
+          (selectionchange)="setCncPort($event)"
         ></app-dropdown>
         <app-input
           label="CNC Baudrate"
@@ -151,6 +152,7 @@
           label="UART Switch Port"
           class="col-span-{{ width >= 400 ? '2' : '4' }}"
           [items]="localSerialDropdownOptions | async"
+          [value]="switchPort"
           (selectionchange)="switchPort = $event"
         ></app-dropdown>
         <app-input

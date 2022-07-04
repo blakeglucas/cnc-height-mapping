@@ -88,6 +88,9 @@ export class CalibrationComponent implements OnInit {
           this.calibrationFinished = true;
           this.calibrationRunning = false;
         },
+        onError: () => {
+          this.calibrationRunning = false;
+        },
       });
       this.calibrationRunning = true;
     }

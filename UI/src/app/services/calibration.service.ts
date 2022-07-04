@@ -21,6 +21,7 @@ type CalibrationParams = {
   zstep: number;
   ztrav: number;
   onComplete: () => void;
+  onError: (err: Error | string) => void;
 };
 
 @Injectable({
@@ -62,13 +63,19 @@ export class CalibrationService extends IPCRendererBase {
     return this._points.getValue();
   }
 
+  get running() {
+    return this.state === CALIBRATION_STATE.RUNNING;
+  }
+
   async start(params: CalibrationParams) {
     this.calParams = {
       ...params,
     };
     this.dX = this.calParams.x / (this.calParams.xn - 1);
     this.dY = this.calParams.y / (this.calParams.yn - 1);
-    await this.serialService.sendCommand(SERIAL_COMMAND.GO_TO_ORIGIN);
+    await this.serialService.sendCommand(SERIAL_COMMAND.GO_TO_ORIGIN_Z, {
+      z: this.calParams.ztrav,
+    });
     await this.serialService.sendCommand(SERIAL_COMMAND.MOVE_REL, {
       z: this.calParams.ztrav,
     });
@@ -99,8 +106,10 @@ export class CalibrationService extends IPCRendererBase {
       ) {
         this.zResults = [];
         await this.serialService.sendCommand(SERIAL_COMMAND.MOVE_ABS, {
-          x: this.cX,
           z: this.calParams.ztrav,
+        });
+        await this.serialService.sendCommand(SERIAL_COMMAND.MOVE_ABS, {
+          x: this.cX,
         });
         // Required to prevent skipping position bc switch race condition
         await sleep(1500);
@@ -111,7 +120,7 @@ export class CalibrationService extends IPCRendererBase {
           this.state === CALIBRATION_STATE.RUNNING
         ) {
           await this.serialService.sendCommand(SERIAL_COMMAND.MOVE_REL, {
-            z: -1 * this.calParams.zstep,
+            z: -1 * Math.abs(this.calParams.zstep),
           });
           await sleep(600);
           i++;
@@ -169,9 +178,12 @@ export class CalibrationService extends IPCRendererBase {
     this._points.next([...this._points.getValue(), point]);
   }
 
-  stop() {
+  stop(error: Error | string | undefined = undefined) {
     this.abortController.abort();
     this.abortController = new AbortController();
+    if (error) {
+      this.calParams.onError(error);
+    }
   }
 
   clear() {
