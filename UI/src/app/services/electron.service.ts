@@ -19,6 +19,8 @@ export class ElectronService {
   childProcess: typeof childProcess;
   fs: typeof fs;
 
+  windowTitle = 'CNC Auto-Leveling Tool';
+
   constructor(
     private heightMapService: HeightMapService,
     private gCodeService: GcodeService,
@@ -53,6 +55,10 @@ export class ElectronService {
       // TODO Refactor to SerialService via ipcRenderer directly
       this.ipcRenderer.on('serial:list_ports', (event, ports: PortInfo[]) => {
         this.serialService.availablePorts = ports;
+      });
+
+      this.ipcRenderer.on('web:title', (event, newTitle) => {
+        this.windowTitle = newTitle;
       });
 
       this.getAvailableSerialPorts();

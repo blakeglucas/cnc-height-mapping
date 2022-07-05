@@ -4,7 +4,7 @@ import { SerialService } from './serial.service';
 import { SERIAL_COMMAND } from '../interfaces/SerialService.interface';
 import { sleep } from '../utils/sleep';
 import { BehaviorSubject } from 'rxjs';
-import { HeightMapService } from './height-map.service';
+import { HeightMap, HeightMapService } from './height-map.service';
 
 enum CALIBRATION_STATE {
   IDLE = 0,
@@ -68,6 +68,10 @@ export class CalibrationService extends IPCRendererBase {
 
   get points() {
     return this._points.getValue();
+  }
+
+  set points(val: HeightMap) {
+    this._points.next(val);
   }
 
   get running() {

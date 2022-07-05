@@ -19,7 +19,7 @@ export class MenuBarComponent implements OnInit {
   isMaximized = false;
 
   constructor(
-    private electronService: ElectronService,
+    public electronService: ElectronService,
     private gCodeService: GcodeService,
     private heightMapService: HeightMapService,
     private cdr: ChangeDetectorRef,
@@ -36,8 +36,8 @@ export class MenuBarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    Mousetrap.bind(['ctrl+o p', 'cmd+o p'], () => {
-      console.log('open project');
+    Mousetrap.bind(['ctrl+o', 'cmd+o'], () => {
+      this.openProject();
       return false;
     });
     Mousetrap.bind(['ctrl+o h', 'cmd+o h'], () => {
@@ -65,7 +65,11 @@ export class MenuBarComponent implements OnInit {
       return false;
     });
     Mousetrap.bind(['ctrl+shift+s', 'cmd+shift+s'], () => {
-      console.log('save project as');
+      this.saveProjectAs();
+      return false;
+    });
+    Mousetrap.bind(['ctrl+w', 'cmd+w'], () => {
+      this.closeProject();
       return false;
     });
     Mousetrap.bind(['ctrl+q', 'cmd+q'], () => {
@@ -117,11 +121,33 @@ export class MenuBarComponent implements OnInit {
     );
   }
 
+  openProject() {
+    this.electronService.ipcRenderer.send('file:open_project');
+  }
+
   saveProject() {
+    if (!this.projectService.filePath) {
+      this.saveProjectAs();
+    } else {
+      const data = this.projectService.getProjectContents();
+      this.electronService.ipcRenderer.send(
+        'file:save_project',
+        JSON.stringify(data),
+        this.projectService.filePath
+      );
+    }
+  }
+
+  saveProjectAs() {
     const data = this.projectService.getProjectContents();
     this.electronService.ipcRenderer.send(
-      'file:save_project',
+      'file:save_project_as',
       JSON.stringify(data)
     );
+  }
+
+  closeProject() {
+    this.electronService.windowTitle = 'CNC Auto-Leveling Tool';
+    this.projectService.closeProject();
   }
 }

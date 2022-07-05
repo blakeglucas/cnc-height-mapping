@@ -57,6 +57,15 @@ export class ControlPanelComponent implements OnInit {
         }))
       )
     );
+    // TODO Mitigate multiple sources of truth
+    this.serialService.portsUpdated.subscribe({
+      next: async () => {
+        this._cncPort = this.serialService.cncPort;
+        this._cncBaud = this.serialService.cncPortBaud;
+        this._switchPort = this.serialService.switchPort;
+        this._switchBaud = this.serialService.switchPortBaud;
+      },
+    });
   }
 
   ngOnInit(): void {}

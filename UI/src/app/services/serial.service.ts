@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { PortInfo } from '@serialport/bindings-interface';
 import {
@@ -10,6 +10,11 @@ import { SerialPort } from 'serialport';
 import { ipcRenderer } from 'electron';
 import { NotificationService } from './notification.service';
 import { IPCRendererBase } from '../utils/IPCRendererBase';
+
+type BasicPortInfo = {
+  port?: string;
+  baud: number;
+};
 
 @Injectable({
   providedIn: 'root',
@@ -23,17 +28,55 @@ export class SerialService extends IPCRendererBase implements ISerialService {
   >(undefined);
   readonly activeCommand$ = this._activeCommand.asObservable();
 
+  readonly portsUpdated = new EventEmitter();
+
   constructor(private n: NotificationService) {
     super();
   }
 
-  cncPort: string;
-  switchPort: string;
-  cncPortBaud: number;
-  switchPortBaud: number;
+  _cncPort: string;
+  _switchPort: string;
+  _cncPortBaud: number;
+  _switchPortBaud: number;
 
   set availablePorts(ports: PortInfo[]) {
     this._availablePorts.next(ports);
+  }
+
+  get cncPort() {
+    return this._cncPort;
+  }
+
+  set cncPort(val: string) {
+    this._cncPort = val;
+    this.portsUpdated.emit();
+  }
+
+  get switchPort() {
+    return this._switchPort;
+  }
+
+  set switchPort(val: string) {
+    this._switchPort = val;
+    this.portsUpdated.emit();
+  }
+
+  get cncPortBaud() {
+    return this._cncPortBaud;
+  }
+
+  set cncPortBaud(val: number) {
+    this._cncPortBaud = val;
+    this.portsUpdated.emit();
+  }
+
+  get switchPortBaud() {
+    return this._switchPortBaud;
+  }
+
+  set switchPortBaud(val: number) {
+    this._switchPortBaud = val;
+    this.portsUpdated.emit();
   }
 
   async setCNCPort(portPath: string, baud: number): Promise<void> {

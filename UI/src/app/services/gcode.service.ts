@@ -20,8 +20,16 @@ export class GcodeService {
     return this._rawGCode.getValue();
   }
 
+  set rawGCode(val: string) {
+    this._rawGCode.next(val);
+  }
+
   get cGCode() {
     return this._cGCode.getValue();
+  }
+
+  set cGCode(val: string) {
+    this._cGCode.next(val);
   }
 
   setRawGCode(g: string, path: string) {

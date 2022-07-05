@@ -9,6 +9,7 @@ import {
   HeightMapMetadata,
   HeightMapService,
 } from './height-map.service';
+import { NotificationService } from './notification.service';
 import { SerialService } from './serial.service';
 
 export type ProjectMetadata = {
@@ -66,16 +67,68 @@ export class ProjectService extends IPCRendererBase {
   >(undefined);
   readonly openedProject$ = this._openedProject.asObservable();
 
+  filePath = '';
+
   constructor(
     private calibrationService: CalibrationService,
     private gcodeService: GcodeService,
     private heightMapService: HeightMapService,
-    private serialService: SerialService
+    private serialService: SerialService,
+    private notificationService: NotificationService
   ) {
     super();
+
+    this.ipcRenderer.on(
+      'file:open_project',
+      (event, pFileContent, filePath) => {
+        this.openProject(pFileContent);
+        this.filePath = filePath;
+      }
+    );
+
+    this.ipcRenderer.on('file:save_project_as', (event, filePath) => {
+      this.filePath = filePath;
+    });
   }
 
-  openProject(pFileContent: string) {}
+  get openedProject() {
+    return this._openedProject.getValue();
+  }
+
+  openProject(pFileContent: string) {
+    try {
+      const data: ProjectFileSchema = JSON.parse(pFileContent);
+      this._openedProject.next(data);
+      this.calibrationService.xDim = data.calibration.x;
+      this.calibrationService.yDim = data.calibration.y;
+      this.calibrationService.xDiv = data.calibration.xpoints;
+      this.calibrationService.yDiv = data.calibration.ypoints;
+      this.calibrationService.zStep = data.calibration.zstep;
+      this.calibrationService.zTrav = data.calibration.ztrav;
+      this.calibrationService.points = data.calibration.data || [];
+
+      this.heightMapService.currentHeightMap = data.heightMap.map;
+      this.heightMapService.currentMetadata = data.heightMap.metadata;
+
+      // TODO Check file paths
+      this.gcodeService.rawGCode = data.gcode.raw.filecontent || '';
+      this.gcodeService.cGCode = data.gcode.contoured.filecontent || '';
+
+      this.serialService.setCNCPort(
+        data.control.cncPort,
+        data.control.cncPortBaud
+      );
+      this.serialService.setSwitchPort(
+        data.control.switchPort,
+        data.control.switchPortBaud
+      );
+    } catch (e) {
+      console.error(e);
+      this.notificationService.showError(
+        'There was an error loading the project. Project may be loaded incompletely. There may be an error with the project file.'
+      );
+    }
+  }
 
   getProjectContents() {
     const data: ProjectFileSchema = {
@@ -114,5 +167,10 @@ export class ProjectService extends IPCRendererBase {
       },
     };
     return data;
+  }
+
+  closeProject() {
+    this.filePath = '';
+    this._openedProject.next(undefined);
   }
 }

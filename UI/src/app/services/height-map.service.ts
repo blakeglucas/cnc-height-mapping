@@ -42,8 +42,16 @@ export class HeightMapService {
     return this._currentHeightMap.getValue();
   }
 
+  set currentHeightMap(val: HeightMap) {
+    this._currentHeightMap.next(val);
+  }
+
   get currentMetadata() {
     return this._currentMetadata.getValue();
+  }
+
+  set currentMetadata(val: HeightMapMetadata) {
+    this._currentMetadata.next(val);
   }
 
   processHeightMapFile(contents: string) {

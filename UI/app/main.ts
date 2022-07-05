@@ -206,10 +206,41 @@ try {
     }
   });
 
-  ipcMain.on('file:save_project', async (event, projectContents) => {
+  ipcMain.on('file:open_project', async () => {
+    if (win) {
+      const result = await dialog.showOpenDialog(win, {
+        title: 'Open Project',
+        properties: ['openFile'],
+        filters: [
+          {
+            name: 'Project Files',
+            extensions: ['catproj', 'chmproj', 'cnclevelproj'],
+          },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+      if (!result.canceled) {
+        const contents = await fs.promises.readFile(result.filePaths[0]);
+        win.webContents.send(
+          'file:open_project',
+          contents.toString(),
+          result.filePaths[0]
+        );
+        const newTitle = `CNC Auto-Leveling Tool - ${result.filePaths[0]}`;
+        win.webContents.send('web:title', newTitle);
+        win.setTitle(newTitle);
+      }
+    }
+  });
+
+  ipcMain.on('file:save_project', async (event, projectContents, filePath) => {
+    await fs.promises.writeFile(filePath, projectContents);
+  });
+
+  ipcMain.on('file:save_project_as', async (event, projectContents) => {
     if (win) {
       const result = await dialog.showSaveDialog(win, {
-        title: 'Save Project',
+        title: 'Save Project As',
         filters: [
           {
             name: 'Project Files',
@@ -221,6 +252,10 @@ try {
       if (!result.canceled) {
         const fpath = result.filePath;
         await fs.promises.writeFile(fpath, projectContents);
+        win.webContents.send('file:save_project_as', fpath);
+        const newTitle = `CNC Auto-Leveling Tool - ${fpath}`;
+        win.webContents.send('web:title', newTitle);
+        win.setTitle(newTitle);
       }
     }
   });
