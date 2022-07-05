@@ -19,4 +19,4 @@ I have butchered a fair few CNC bits developing this technique. By using or extr
 
 ## Logo Credits
 
-CAT Logo extrapolated from [anggasaputro on Vecteezy](https://www.vecteezy.com/free-vector/cat-logo)
+CAT Logo extrapolated from [anggasaputro on Vecteezy](https://www.vecteezy.com/free-vector/cat-logo).
