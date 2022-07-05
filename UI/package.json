@@ -2,7 +2,7 @@
   "name": "cat",
   "version": "0.1.0",
   "description": "CNC Auto-Levling Tool",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "homepage": "https://github.com/blakeglucas/CAT",
   "author": {
     "name": "Blake Lucas",
     "email": "blakeglucas@gmail.com"
