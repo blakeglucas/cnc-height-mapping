@@ -60,6 +60,11 @@ function createWindow(): BrowserWindow {
     );
   }
 
+  win.webContents.on('new-window', function (e, url) {
+    e.preventDefault();
+    require('electron').shell.openExternal(url);
+  });
+
   // Emitted when the window is closed.
   win.on('closed', () => {
     // Dereference the window object, usually you would store window
@@ -82,7 +87,7 @@ function errorHandler(err: Error) {
 ipcMain.setMaxListeners(0);
 process.setMaxListeners(0);
 process.on('uncaughtException', errorHandler);
-// process.on('unhandledRejection', errorHandler);
+process.on('unhandledRejection', errorHandler);
 ipcMain.on('unhandledRejection', (evt, err) => {
   console.log('ipcuhr', evt, err);
 });
@@ -412,6 +417,13 @@ try {
       win.webContents.send('serial:command', undefined, result);
     }
   );
+
+  ipcMain.on('licenses', async () => {
+    const data = await fs.promises.readFile(
+      path.join(__dirname, './licenses.json')
+    );
+    win.webContents.send('licenses', data.toString());
+  });
 } catch (e) {
   // Catch Error
   // throw e;

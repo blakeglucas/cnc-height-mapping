@@ -33,6 +33,7 @@ import { CurrentHeightMapComponent } from './views/current-height-map/current-he
 import { MachineControlComponent } from './components/machine-control/machine-control.component';
 import { CalibrationComponent } from './views/calibration/calibration.component';
 import { CalibrationGridComponent } from './components/calibration-grid/calibration-grid.component';
+import { LicensesComponent } from './components/licenses/licenses.component';
 
 // AoT requires an exported function for factories
 const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
@@ -54,6 +55,7 @@ const httpLoaderFactory = (http: HttpClient): TranslateHttpLoader =>
     MachineControlComponent,
     CalibrationComponent,
     CalibrationGridComponent,
+    LicensesComponent,
   ],
   imports: [
     BrowserModule,

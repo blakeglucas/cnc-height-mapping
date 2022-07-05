@@ -56,9 +56,13 @@
       <x-menuitem>
         <x-label>Help</x-label>
         <x-menu>
-          <x-menuitem>
+          <x-menuitem (click)="showAbout()">
             <x-label>About</x-label>
             <!-- <x-shortcut value="Control+O H"></x-shortcut> -->
+          </x-menuitem>
+          <hr />
+          <x-menuitem (click)="showLicenses()">
+            <x-label>Open-Source Licenses</x-label>
           </x-menuitem>
         </x-menu>
       </x-menuitem>
@@ -106,3 +110,14 @@
     </button>
   </div>
 </header>
+<dialog hidden #aboutDialog class="mt-8 z-50">
+  <main>
+    <h1 class="text-lg font-bold">About</h1>
+    <p>Version {{ packageInfo.version }}</p>
+    <p>&copy; Blake Lucas {{ year }}</p>
+  </main>
+  <footer>
+    <app-button label="Close" class="mr-4" (click)="closeAbout()"></app-button>
+  </footer>
+</dialog>
+<app-licenses [open]="licensesOpen" (close)="hideLicenses()"></app-licenses>

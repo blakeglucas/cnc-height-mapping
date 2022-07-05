@@ -1,8 +1,10 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   HostListener,
   OnInit,
+  ViewChild,
 } from '@angular/core';
 import * as Mousetrap from 'mousetrap';
 import { ElectronService } from '../../services/electron.service';
@@ -10,13 +12,23 @@ import { GcodeService } from '../../services/gcode.service';
 import { HeightMapService } from '../../services/height-map.service';
 import { ProjectService } from '../../services/project.service';
 
+import * as packageInfo from '../../../../package.json';
+
 @Component({
   selector: 'app-menu-bar',
   templateUrl: './menu-bar.component.html',
   styleUrls: ['./menu-bar.component.scss'],
 })
 export class MenuBarComponent implements OnInit {
+  readonly packageInfo = packageInfo;
+  readonly year = new Date().getFullYear();
+
   isMaximized = false;
+
+  @ViewChild('aboutDialog', { read: ElementRef })
+  aboutDialog: ElementRef<HTMLDialogElement>;
+
+  licensesOpen = false;
 
   constructor(
     public electronService: ElectronService,
@@ -149,5 +161,23 @@ export class MenuBarComponent implements OnInit {
   closeProject() {
     this.electronService.windowTitle = 'CNC Auto-Leveling Tool';
     this.projectService.closeProject();
+  }
+
+  showAbout() {
+    this.aboutDialog.nativeElement.removeAttribute('hidden');
+    this.aboutDialog.nativeElement.setAttribute('open', 'true');
+  }
+
+  closeAbout() {
+    this.aboutDialog.nativeElement.removeAttribute('open');
+    this.aboutDialog.nativeElement.setAttribute('hidden', 'true');
+  }
+
+  showLicenses() {
+    this.licensesOpen = true;
+  }
+
+  hideLicenses() {
+    this.licensesOpen = false;
   }
 }

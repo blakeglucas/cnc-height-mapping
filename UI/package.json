@@ -1,11 +1,11 @@
 {
-  "name": "angular-electron",
-  "version": "10.5.2",
-  "description": "Angular 13 with Electron 18 (Typescript + SASS + Hot Reload)",
+  "name": "cat",
+  "version": "0.1.0",
+  "description": "CNC Auto-Levling Tool",
   "homepage": "https://github.com/maximegris/angular-electron",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "Blake Lucas",
+    "email": "blakeglucas@gmail.com"
   },
   "keywords": [
     "angular",
@@ -48,7 +48,8 @@
     "e2e:show-trace": "playwright show-trace e2e/tracing/trace.zip",
     "version": "conventional-changelog -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "lint": "ng lint",
-    "prepare": "cd ../ && husky install ./UI/.husky"
+    "prepare": "npm run generate_license_report && cd ../ && husky install ./UI/.husky",
+    "generate_license_report": "npx license-report --only=prod,peer,opt > ./app/licenses.json"
   },
   "dependencies": {
     "@angular/animations": "13.3.8",
