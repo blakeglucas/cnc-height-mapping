@@ -34,13 +34,6 @@ export class CalibrationComponent implements OnInit {
   @ViewChild('confirmDialog', { read: ElementRef })
   confirmDialog: ElementRef<HTMLDialogElement>;
 
-  xDim = 20;
-  yDim = 20;
-  xDiv = 5;
-  yDiv = 5;
-  zStep = 0.1;
-  zTravel = 1;
-
   private camera: THREE.PerspectiveCamera;
   private scene: THREE.Scene;
   private renderer: THREE.WebGLRenderer;
@@ -65,6 +58,54 @@ export class CalibrationComponent implements OnInit {
     });
   }
 
+  get xDim() {
+    return this.calibrationService.xDim;
+  }
+
+  set xDim(val: number) {
+    this.calibrationService.xDim = val;
+  }
+
+  get yDim() {
+    return this.calibrationService.yDim;
+  }
+
+  set yDim(val: number) {
+    this.calibrationService.yDim = val;
+  }
+
+  get xDiv() {
+    return this.calibrationService.xDiv;
+  }
+
+  set xDiv(val: number) {
+    this.calibrationService.xDiv = val;
+  }
+
+  get yDiv() {
+    return this.calibrationService.yDiv;
+  }
+
+  set yDiv(val: number) {
+    this.calibrationService.yDiv = val;
+  }
+
+  get zTrav() {
+    return this.calibrationService.zTrav;
+  }
+
+  set zTrav(val: number) {
+    this.calibrationService.zTrav = val;
+  }
+
+  get zStep() {
+    return this.calibrationService.zStep;
+  }
+
+  set zStep(val: number) {
+    this.calibrationService.zStep = val;
+  }
+
   ngOnInit(): void {}
 
   canStart() {
@@ -83,7 +124,7 @@ export class CalibrationComponent implements OnInit {
         xn: this.xDiv,
         yn: this.yDiv,
         zstep: this.zStep,
-        ztrav: this.zTravel,
+        ztrav: this.zTrav,
         onComplete: () => {
           this.calibrationFinished = true;
           this.calibrationRunning = false;

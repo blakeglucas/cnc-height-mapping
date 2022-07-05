@@ -82,7 +82,10 @@ function errorHandler(err: Error) {
 ipcMain.setMaxListeners(0);
 process.setMaxListeners(0);
 process.on('uncaughtException', errorHandler);
-process.on('unhandledRejection', errorHandler);
+// process.on('unhandledRejection', errorHandler);
+ipcMain.on('unhandledRejection', (evt, err) => {
+  console.log('ipcuhr', evt, err);
+});
 
 try {
   // This method will be called when Electron has finished
@@ -170,7 +173,11 @@ try {
       });
       if (!result.canceled) {
         const contents = await fs.promises.readFile(result.filePaths[0]);
-        win.webContents.send('file:open_raw_gcode', contents.toString());
+        win.webContents.send(
+          'file:open_raw_gcode',
+          contents.toString(),
+          result.filePaths[0]
+        );
       }
     }
   });
@@ -190,7 +197,30 @@ try {
       });
       if (!result.canceled) {
         const contents = await fs.promises.readFile(result.filePaths[0]);
-        win.webContents.send('file:open_contoured_gcode', contents.toString());
+        win.webContents.send(
+          'file:open_contoured_gcode',
+          contents.toString(),
+          result.filePaths[0]
+        );
+      }
+    }
+  });
+
+  ipcMain.on('file:save_project', async (event, projectContents) => {
+    if (win) {
+      const result = await dialog.showSaveDialog(win, {
+        title: 'Save Project',
+        filters: [
+          {
+            name: 'Project Files',
+            extensions: ['catproj', 'chmproj', 'cnclevelproj'],
+          },
+          { name: 'All Files', extensions: ['*'] },
+        ],
+      });
+      if (!result.canceled) {
+        const fpath = result.filePath;
+        await fs.promises.writeFile(fpath, projectContents);
       }
     }
   });
@@ -294,17 +324,18 @@ try {
   ipcMain.on(
     'serial:set_switch_port',
     async (event, path: string, baud: number) => {
+      if (switchPort && switchPort.isOpen) {
+        await switchPort.close();
+      }
+      switchPort = new SwitchPort(
+        {
+          path,
+          baudRate: baud,
+        },
+        win.webContents.send.bind(win.webContents)
+      );
       try {
-        if (switchPort) {
-          await switchPort.close();
-        }
-        switchPort = new SwitchPort(
-          {
-            path,
-            baudRate: baud,
-          },
-          win.webContents.send.bind(win.webContents)
-        );
+        await switchPort.init();
         win.webContents.send('serial:set_switch_port');
       } catch (e) {
         win.webContents.send('serial:set_switch_port', e.toString());

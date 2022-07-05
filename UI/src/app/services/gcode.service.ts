@@ -11,16 +11,24 @@ export class GcodeService {
   private readonly _cGCode = new BehaviorSubject<string>('');
   readonly cGCode$ = this._cGCode.asObservable();
 
+  rawFilePath = '';
+  cFilePath = '';
+
   constructor() {}
+
+  get rawGCode() {
+    return this._rawGCode.getValue();
+  }
 
   get cGCode() {
     return this._cGCode.getValue();
   }
 
-  setRawGCode(g: string) {
+  setRawGCode(g: string, path: string) {
     if (g) {
       // TODO Validate
       this._rawGCode.next(g);
+      this.rawFilePath = path;
     }
   }
 
@@ -28,9 +36,10 @@ export class GcodeService {
     this._rawGCode.next('');
   }
 
-  setCGCode(c: string) {
+  setCGCode(c: string, path: string) {
     if (c) {
       this._cGCode.next(c);
+      this.cFilePath = path;
     }
   }
 

@@ -224,7 +224,7 @@ export class GcodeRendererComponent
       -1
     ).filter((a) => !!a);
     const cGCode = gCodeLines.map((line) => line.repr()).join('\n');
-    this.gCodeService.setCGCode(cGCode);
+    this.gCodeService.setCGCode(cGCode, undefined);
     this.contoured.emit();
   }
 }

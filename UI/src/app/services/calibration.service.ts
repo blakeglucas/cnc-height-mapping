@@ -38,13 +38,20 @@ export class CalibrationService extends IPCRendererBase {
   private dX = 0;
   private dY = 0;
 
-  private calParams: CalibrationParams;
+  private _calParams: CalibrationParams;
 
   private switchTrigger = false;
   private abortController: AbortController;
 
   private readonly _points = new BehaviorSubject<number[][]>([]);
   readonly points$ = this._points.asObservable();
+
+  xDim = 20;
+  yDim = 20;
+  xDiv = 5;
+  yDiv = 5;
+  zStep = 0.1;
+  zTrav = 1;
 
   constructor(
     private serialService: SerialService,
@@ -65,6 +72,14 @@ export class CalibrationService extends IPCRendererBase {
 
   get running() {
     return this.state === CALIBRATION_STATE.RUNNING;
+  }
+
+  get calParams() {
+    return this._calParams;
+  }
+
+  set calParams(val: CalibrationParams) {
+    this._calParams = { ...val };
   }
 
   async start(params: CalibrationParams) {

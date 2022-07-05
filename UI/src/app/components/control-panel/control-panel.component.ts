@@ -120,11 +120,6 @@ export class ControlPanelComponent implements OnInit {
     return this._cncPort;
   }
 
-  set cncPort(port: string) {
-    this._cncPort = port;
-    this.createCNCSerial();
-  }
-
   get cncBaud() {
     return this._cncBaud;
   }
@@ -136,11 +131,6 @@ export class ControlPanelComponent implements OnInit {
 
   get switchPort() {
     return this._switchPort;
-  }
-
-  set switchPort(port: string) {
-    this._switchPort = port;
-    this.createSwitchSerial();
   }
 
   get switchBaud() {
@@ -166,6 +156,11 @@ export class ControlPanelComponent implements OnInit {
     }
   }
 
+  async setSwitchPort(portPath: string) {
+    this._switchPort = portPath;
+    await this.createSwitchSerial();
+  }
+
   async createSwitchSerial() {
     try {
       await this.serialService.setSwitchPort(
@@ -173,6 +168,7 @@ export class ControlPanelComponent implements OnInit {
         this._switchBaud
       );
     } catch (e) {
+      // console.log(e)
       this._switchPort = '';
       this.cdr.detectChanges();
     }

@@ -29,6 +29,8 @@ export class SerialService extends IPCRendererBase implements ISerialService {
 
   cncPort: string;
   switchPort: string;
+  cncPortBaud: number;
+  switchPortBaud: number;
 
   set availablePorts(ports: PortInfo[]) {
     this._availablePorts.next(ports);
@@ -44,6 +46,7 @@ export class SerialService extends IPCRendererBase implements ISerialService {
           this.cncPort = undefined;
           reject(err);
         }
+        this.cncPortBaud = baud;
         resolve();
       });
       this.ipcRenderer.send(eventTag, portPath, baud);
@@ -61,6 +64,7 @@ export class SerialService extends IPCRendererBase implements ISerialService {
           this.switchPort = undefined;
           reject(err);
         }
+        this.switchPortBaud = baud;
         resolve();
       });
       this.ipcRenderer.send(eventTag, portPath, baud);
@@ -75,7 +79,7 @@ export class SerialService extends IPCRendererBase implements ISerialService {
         if (err) {
           console.log(err);
           this.n.showError(err);
-          throw new Error(err);
+          reject(err);
         }
         resolve(result);
       });

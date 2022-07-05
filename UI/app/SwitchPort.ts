@@ -4,27 +4,42 @@ export type SendFunction = (channel: string, ...args: any[]) => void;
 
 export class SwitchPort {
   private readonly eventTag = 'serial:switch_trigger';
-  private readonly serialPort: SerialPort;
+  private serialPort: SerialPort;
   private readonly send: SendFunction;
 
-  constructor(portOptions: SerialPortOpenOptions<any>, send: SendFunction) {
+  constructor(
+    private portOptions: SerialPortOpenOptions<any>,
+    send: SendFunction
+  ) {
     // No bind to retain sendfn's original context
     this.send = send;
-    this.serialPort = new SerialPort(portOptions, (err) => {
-      if (err) {
-        console.error(err);
-        throw err;
-      }
-    });
-    this.serialPort.setMaxListeners(0);
+
     this.errorHandler = this.errorHandler.bind(this);
     this.dataHandler = this.dataHandler.bind(this);
-    this.serialPort.on('error', this.errorHandler);
-    this.serialPort.on('data', this.dataHandler);
   }
 
   get isOpen() {
-    return this.serialPort.isOpen;
+    return this.serialPort && this.serialPort.isOpen;
+  }
+
+  get serialOptions() {
+    return this.portOptions;
+  }
+
+  async init() {
+    this.serialPort = await new Promise<SerialPort>((resolve, reject) => {
+      const a = new SerialPort(this.portOptions, (err) => {
+        if (err) {
+          // console.error(err);
+          reject(err);
+        } else {
+          resolve(a);
+        }
+      });
+    });
+    this.serialPort.setMaxListeners(0);
+    this.serialPort.on('error', this.errorHandler);
+    this.serialPort.on('data', this.dataHandler);
   }
 
   errorHandler(err: any, err2: any) {

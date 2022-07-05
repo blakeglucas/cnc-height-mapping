@@ -8,6 +8,7 @@ import * as Mousetrap from 'mousetrap';
 import { ElectronService } from '../../services/electron.service';
 import { GcodeService } from '../../services/gcode.service';
 import { HeightMapService } from '../../services/height-map.service';
+import { ProjectService } from '../../services/project.service';
 
 @Component({
   selector: 'app-menu-bar',
@@ -21,7 +22,8 @@ export class MenuBarComponent implements OnInit {
     private electronService: ElectronService,
     private gCodeService: GcodeService,
     private heightMapService: HeightMapService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private projectService: ProjectService
   ) {
     this.electronService.ipcRenderer.on(
       'menubar:ismaximized',
@@ -59,7 +61,7 @@ export class MenuBarComponent implements OnInit {
       return false;
     });
     Mousetrap.bind(['ctrl+s', 'cmd+s'], () => {
-      console.log('save project');
+      this.saveProject();
       return false;
     });
     Mousetrap.bind(['ctrl+shift+s', 'cmd+shift+s'], () => {
@@ -112,6 +114,14 @@ export class MenuBarComponent implements OnInit {
     this.electronService.ipcRenderer.send(
       'file:save_cgcode',
       this.gCodeService.cGCode
+    );
+  }
+
+  saveProject() {
+    const data = this.projectService.getProjectContents();
+    this.electronService.ipcRenderer.send(
+      'file:save_project',
+      JSON.stringify(data)
     );
   }
 }

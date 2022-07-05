@@ -27,6 +27,7 @@ export class ErrorService extends IPCRendererBase {
   }
 
   private errorHandler(event: any, err: Error | string) {
+    console.warn(err);
     this.notificationService.showError(`ERROR: "${err}"`);
     if (this.calibrationService.running) {
       this.calibrationService.stop(err);

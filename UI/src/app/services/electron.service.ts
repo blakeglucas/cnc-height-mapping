@@ -36,14 +36,17 @@ export class ElectronService {
         this.heightMapService.processHeightMapFile(fileContents);
       });
 
-      this.ipcRenderer.on('file:open_raw_gcode', (event, fileContents) => {
-        this.gCodeService.setRawGCode(fileContents);
-      });
+      this.ipcRenderer.on(
+        'file:open_raw_gcode',
+        (event, fileContents, filePath) => {
+          this.gCodeService.setRawGCode(fileContents, filePath);
+        }
+      );
 
       this.ipcRenderer.on(
         'file:open_contoured_gcode',
-        (event, fileContents) => {
-          this.gCodeService.setCGCode(fileContents);
+        (event, fileContents, filePath) => {
+          this.gCodeService.setCGCode(fileContents, filePath);
         }
       );
 
