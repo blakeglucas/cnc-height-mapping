@@ -22,6 +22,7 @@ function createWindow(): BrowserWindow {
 
   // Create the browser window.
   win = new BrowserWindow({
+    icon: path.join(__dirname, '../src/assets/icons/CATlogo.png'),
     x: 0,
     y: 0,
     width: size.width,

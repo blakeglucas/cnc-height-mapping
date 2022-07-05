@@ -16,3 +16,7 @@ The UART device serves as a "switch." The signal ground of the UART device is at
 ## Disclaimer
 
 I have butchered a fair few CNC bits developing this technique. By using or extrapolating from this software, you agree to indemnify me and hold me harmless for any damage that may happen to you, your CNC equipment, or your workspace. Please use carefully and at your own risk. All software herein is provided without warranty under the MIT license.
+
+## Logo Credits
+
+CAT Logo extrapolated from [anggasaputro on Vecteezy](https://www.vecteezy.com/free-vector/cat-logo)

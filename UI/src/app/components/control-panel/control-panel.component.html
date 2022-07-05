@@ -60,7 +60,7 @@
             label="CNC Machine Port"
             class="col-span-{{ width >= 400 ? '2' : '6' }}"
             [items]="cncDropdownOptions | async"
-            (selectionchange)="cncPort = $event"
+            (selectionchange)="setCncPort($event)"
           ></app-dropdown>
           <app-input
             label="CNC Baudrate"
