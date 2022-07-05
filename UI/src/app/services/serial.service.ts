@@ -66,6 +66,7 @@ export class SerialService extends IPCRendererBase implements ISerialService {
   }
 
   set cncPortBaud(val: number) {
+    console.log(val);
     this._cncPortBaud = val;
     this.portsUpdated.emit();
   }

@@ -60,10 +60,10 @@ export class ControlPanelComponent implements OnInit {
     // TODO Mitigate multiple sources of truth
     this.serialService.portsUpdated.subscribe({
       next: async () => {
-        this._cncPort = this.serialService.cncPort;
-        this._cncBaud = this.serialService.cncPortBaud;
-        this._switchPort = this.serialService.switchPort;
-        this._switchBaud = this.serialService.switchPortBaud;
+        this._cncPort = this.serialService.cncPort || '';
+        this._cncBaud = this.serialService.cncPortBaud || 115200;
+        this._switchPort = this.serialService.switchPort || '';
+        this._switchBaud = this.serialService.switchPortBaud || 9600;
       },
     });
   }
@@ -171,6 +171,7 @@ export class ControlPanelComponent implements OnInit {
   }
 
   async createSwitchSerial() {
+    console.log(this._cncPort, this._cncBaud);
     try {
       await this.serialService.setSwitchPort(
         this._switchPort,
@@ -180,6 +181,8 @@ export class ControlPanelComponent implements OnInit {
       // console.log(e)
       this._switchPort = '';
       this.cdr.detectChanges();
+    } finally {
+      console.log(this._cncPort, this._cncBaud);
     }
   }
 

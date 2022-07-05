@@ -14,30 +14,19 @@
     {
       "from": "dist",
       "to": "app",
-      "filter": [
-        "**/*"
-      ]
+      "filter": ["**/*"]
     }
   ],
   "win": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "portable"
-    ]
-  },
-  "portable": {
-    "splashImage": "dist/assets/icons/electron.bmp"
+    "icon": "dist/assets/icons/CATlogo.ico",
+    "target": ["portable"]
   },
   "mac": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "dmg"
-    ]
+    "icon": "dist/assets/icons/CATlogo.ico",
+    "target": ["dmg"]
   },
   "linux": {
-    "icon": "dist/assets/icons",
-    "target": [
-      "AppImage"
-    ]
+    "icon": "dist/assets/icons/CATlogo.ico",
+    "target": ["AppImage"]
   }
 }
